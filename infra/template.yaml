@@ -87,6 +87,12 @@ Resources:
             Path: /read
             Method: post
             RestApiId: !Ref Api
+        Ask:
+          Type: Api
+          Properties:
+            Path: /ask
+            Method: post
+            RestApiId: !Ref Api
 
   Api:
     Type: AWS::Serverless::Api

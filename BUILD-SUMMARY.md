@@ -15,7 +15,7 @@ allows it, and nothing in the code changes.
 
 | Service | What it does here | Why this one |
 |---|---|---|
-| **Amazon Bedrock** (Claude Haiku 4.5) | Two jobs: reads a photographed report, and writes the plain-language paragraph in English or Hindi | One service doing both is what the free plan allowed, and it turned out to be the better design. It keeps a medical document inside our own AWS account instead of sending it to a third-party API, and the same model that reads the page also explains it. Haiku is the cheapest Claude tier. |
+| **Amazon Bedrock** (Claude Haiku 4.5) | Three jobs: reads a photographed report, writes the plain-language paragraph in English or Hindi, and answers follow-up questions as Niqo | One service doing both is what the free plan allowed, and it turned out to be the better design. It keeps a medical document inside our own AWS account instead of sending it to a third-party API, and the same model that reads the page also explains it. Haiku is the cheapest Claude tier. |
 | **AWS Lambda** (arm64) | Reads the PDF, runs the parser, calls Bedrock | A person reads a report once and then not for months, so the traffic is spiky and paying per request is the honest shape. arm64 is cheaper per millisecond. 512 MB, 30 s timeout, measured at 89 MB used. |
 | **Amazon API Gateway** (REST) | The `/read` endpoint | Handles binary upload (`BinaryMediaTypes`) and, more importantly, gives a **hard throttle of 10 requests a second**, so neither a bug nor a bad actor can run up a bill on a student account. |
 | **Amazon S3** | Two buckets: the page, and a scratch bucket | Both block all public access. The scratch bucket expires objects after a day; reports are handled in memory and nothing is meant to persist, so the rule is a backstop. |
@@ -64,6 +64,22 @@ browser ──POST /read──> API Gateway ──> Lambda
 lab, method and machine. Reading the lab's own printed interval means we never tell
 someone they are abnormal when their lab says otherwise, and it keeps medical claims
 out of our code.
+
+**Niqo answers follow-up questions, on a very short leash.** A free-text box is where
+guardrails get tested, so Niqo is handed three things and nothing else: the results read
+off this person's report, the sourced notes for those results, and the question. The
+system prompt says that is the whole of its knowledge for the conversation. It may not
+name a condition, may not mention a medicine, dose or diet, may not invent a number, and
+must say plainly when the answer is not in what it was given. Asked "Do I have thyroid
+disease?" it declines and restates what the numbers show; asked "मुझे क्या दवा लेनी
+चाहिए?" it declines and sends them to their doctor. The report travels from the browser
+with the question, because nothing is stored server-side to look up.
+
+**The range bar does the explaining before the words do.** Each result is drawn against
+the lab's own interval: the band is the normal range, the pin is where this person
+actually sits. Someone who reads no English at all can see that 8.42 is far to the right
+of 0.55–4.78 while 0.81 is just left of 0.89–1.76. It is computed from numbers already
+on the page, costs nothing, and is the fastest part of the answer to understand.
 
 **Hindi is a real translation, not a live one.** The sourced notes exist in Hindi as a
 committed file, `backend/glossary.hi.json`, translated once from our own English

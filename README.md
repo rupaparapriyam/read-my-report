@@ -31,7 +31,8 @@ cd web && python3 -m http.server 8731    # then open http://127.0.0.1:8731
 | `backend/glossary.json` | the only medical content, 16 tests, each with its source URL and review date |
 | `backend/glossary.hi.json` | the same notes in Hindi, translated once and committed, sources unchanged |
 | `backend/translate_glossary.py` | makes that Hindi file; run deliberately, never per request |
-| `backend/handler.py` | the Lambda: read the PDF with pypdf, or a photo with Bedrock → parse → explain |
+| `backend/handler.py` | the Lambda: `/read` reads and explains a report, `/ask` is Niqo |
+| `backend/ask.py` | Niqo: answers follow-up questions using only this report and its sourced notes |
 | `backend/vendor/pypdf` | PDF reader, vendored so the Lambda needs no build step |
 | `web/index.html` | the whole front end, one file, no framework |
 | `infra/template.yaml` | the AWS stack: Lambda, API Gateway, Bedrock, S3, CloudFront |

@@ -26,6 +26,7 @@ import sys
 # pure Python, no build step, and the package ships complete in the deployment zip.
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "vendor"))
 
+from ask import answer as niqo_answer
 from explain import DISCLAIMER, build_brief, with_bedrock
 from parse import parse
 
@@ -105,6 +106,9 @@ def read_report(blob, content_type="application/pdf", language="English"):
 
 def lambda_handler(event, context=None):
     try:
+        path = (event.get("path") or event.get("rawPath") or "").rstrip("/")
+        if path.endswith("/ask"):
+            return _ask(event)
         body = event.get("body") or ""
         blob = base64.b64decode(body) if event.get("isBase64Encoded") else body.encode()
         params = event.get("queryStringParameters") or {}
@@ -117,6 +121,22 @@ def lambda_handler(event, context=None):
     except Exception as exc:                            # noqa: BLE001
         return _response(500, {"error": f"{type(exc).__name__}: {exc}",
                                "disclaimer": DISCLAIMER})
+
+
+def _ask(event):
+    """Niqo answers one follow-up question about the report already on screen.
+
+    The brief comes back from the browser rather than from a store, because nothing is
+    stored. It is the same JSON we sent it a moment ago.
+    """
+    raw = event.get("body") or "{}"
+    if event.get("isBase64Encoded"):
+        raw = base64.b64decode(raw).decode()
+    payload = json.loads(raw)
+    brief = payload.get("brief") or {}
+    out = niqo_answer(brief, payload.get("question", ""),
+                      language=payload.get("language", "English"))
+    return _response(200, out)
 
 
 def _response(status, payload):

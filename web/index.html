@@ -1,86 +1,156 @@
 <!doctype html>
 <html lang="en">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Read My Report</title>
-<meta name="description" content="Understand your blood test report in plain words.">
+<meta name="description" content="Understand your blood test report in plain words. It explains; it does not diagnose.">
+<meta name="theme-color" content="#0b4f45">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230b4f45'/><path d='M9 17h4l2-5 3 9 2-4h3' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <style>
 :root{
-  --ink:#0d1b1a; --muted:#5b6b69; --line:#e1e6e4; --bg:#f7f8f7; --card:#fff;
-  --brand:#0e5e52; --brand-soft:#e8f2ef;
-  --high:#9a3412; --high-bg:#fdf1ea; --low:#1e4e8c; --low-bg:#eef3fb;
-  --radius:14px;
+  --ink:#0c1a18; --body:#445653; --faint:#7b8b88; --line:#e4e9e7; --hair:#eef2f0;
+  --bg:#f6f8f7; --card:#fff;
+  --brand:#0b4f45; --brand-ink:#083c35; --wash:#eaf3f0;
+  --high:#8a3312; --high-bg:#fdf0e8; --low:#1b4a85; --low-bg:#edf3fb;
+  --ok:#1f6b4f;
+  --r:16px; --shadow:0 1px 2px rgba(12,26,24,.04),0 8px 24px -16px rgba(12,26,24,.18);
 }
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  -webkit-font-smoothing:antialiased}
-.wrap{max-width:720px;margin:0 auto;padding:28px 16px 72px}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}
-.brand{display:flex;align-items:center;gap:9px;font-weight:650;letter-spacing:-.01em}
-.dot{width:11px;height:11px;border-radius:50%;background:var(--brand);flex:none}
-.lang{display:flex;gap:2px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:2px}
-.lang button{border:0;background:none;padding:6px 13px;border-radius:999px;cursor:pointer;
-  font:inherit;font-size:13px;color:var(--muted)}
-.lang button[aria-pressed=true]{background:var(--brand);color:#fff;font-weight:600}
-h1{font-size:27px;line-height:1.22;letter-spacing:-.02em;margin:0 0 9px;font-weight:680}
-.lede{color:var(--muted);margin:0 0 24px;font-size:15.5px}
-.drop{background:var(--card);border:1.5px dashed #cfd8d5;border-radius:var(--radius);
-  padding:34px 22px;text-align:center;transition:.15s}
-.drop.over{border-color:var(--brand);background:var(--brand-soft)}
-.drop p{margin:9px 0 0;color:var(--muted);font-size:14px}
-.btn{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:9px;
-  padding:11px 19px;font:inherit;font-weight:600;font-size:15px;cursor:pointer}
-.btn:disabled{opacity:.55;cursor:default}
-.ghost{background:none;color:var(--brand);border:1px solid #c6d6d2;font-weight:550}
-.samples{margin-top:15px;font-size:13.5px;color:var(--muted)}
-.samples button{background:none;border:0;color:var(--brand);cursor:pointer;font:inherit;
-  font-size:13.5px;text-decoration:underline;text-underline-offset:2px;padding:0 3px}
-.hidden{display:none}
-.bar{display:flex;align-items:baseline;gap:9px;margin:30px 0 7px}
-.bar h2{font-size:20px;margin:0;letter-spacing:-.015em;font-weight:660}
-.count{color:var(--muted);font-size:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:17px 18px;margin-bottom:11px}
-.row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
-.test{font-weight:640;letter-spacing:-.01em}
-.val{text-align:right;flex:none}
-.num{font-weight:680;font-size:19px;letter-spacing:-.02em}
-.unit{color:var(--muted);font-size:12.5px;margin-left:3px;font-weight:450}
-.ref{color:var(--muted);font-size:12.5px;margin-top:1px}
-.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.055em;
-  text-transform:uppercase;padding:3px 8px;border-radius:5px;margin-bottom:7px}
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.wrap{max-width:680px;margin:0 auto;padding:22px 20px 80px}
+
+/* ---------- header ---------- */
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:34px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:660;letter-spacing:-.015em;font-size:15px}
+.brand svg{display:block}
+.lang{display:flex;gap:2px;background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:3px}
+.lang button{border:0;background:none;padding:5px 12px;border-radius:999px;cursor:pointer;
+  font:inherit;font-size:13px;font-weight:550;color:var(--faint);transition:.14s}
+.lang button[aria-pressed=true]{background:var(--brand);color:#fff}
+
+/* ---------- opening ---------- */
+h1{font-size:30px;line-height:1.18;letter-spacing:-.028em;margin:0 0 10px;font-weight:690}
+.lede{color:var(--body);margin:0 0 26px;font-size:16px;max-width:30em}
+.drop{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:30px 22px;text-align:center;box-shadow:var(--shadow);transition:.16s}
+.drop.over{border-color:var(--brand);background:var(--wash)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;
+  border:0;border-radius:11px;padding:13px 22px;font:inherit;font-weight:600;font-size:15.5px;
+  cursor:pointer;transition:.14s}
+.btn:hover{background:var(--brand-ink)}
+.btn:disabled{opacity:.6;cursor:default}
+.hint{margin:11px 0 0;color:var(--faint);font-size:13.5px}
+.samples{margin-top:18px;padding-top:16px;border-top:1px solid var(--hair);
+  display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:center}
+.samples span{color:var(--faint);font-size:13px;margin-right:2px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;
+  padding:6px 13px;font:inherit;font-size:13px;color:var(--body);cursor:pointer;transition:.14s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.hidden{display:none!important}
+
+/* ---------- summary ---------- */
+.verdict{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 21px;margin-bottom:12px;box-shadow:var(--shadow)}
+.verdict .count{display:flex;align-items:baseline;gap:9px;margin-bottom:13px}
+.verdict .n{font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.verdict .of{color:var(--faint);font-size:13.5px}
+.verdict p{margin:0 0 9px;font-size:15.3px;color:#243532}
+.verdict p:last-of-type{margin-bottom:0}
+.by{margin-top:13px;padding-top:11px;border-top:1px solid var(--hair);
+  font-size:11.5px;color:var(--faint)}
+.allgood{display:flex;gap:11px;align-items:flex-start}
+.allgood .tick{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ok);
+  color:#fff;display:grid;place-items:center;font-size:12px;margin-top:1px}
+
+/* ---------- a result ---------- */
+.sec{display:flex;align-items:baseline;gap:9px;margin:26px 0 10px}
+.sec h2{font-size:12px;margin:0;font-weight:680;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--faint)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:19px 20px;margin-bottom:10px;box-shadow:var(--shadow)}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.test{font-weight:650;font-size:16.5px;letter-spacing:-.012em}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;padding:3px 7px;border-radius:5px;margin-bottom:8px}
 .tag.high{background:var(--high-bg);color:var(--high)}
 .tag.low{background:var(--low-bg);color:var(--low)}
-.what{margin:12px 0 0;font-size:14.5px}
-.means{margin:7px 0 0;font-size:14.5px;color:#30403e}
-.ask{margin:12px 0 0;padding:10px 12px;background:var(--brand-soft);border-radius:9px;
-  font-size:14px}
-.ask b{font-weight:650}
-.src{margin:9px 0 0;font-size:11.5px;color:var(--muted)}
-.src a{color:var(--muted)}
-.summary{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--brand);
-  border-radius:var(--radius);padding:17px 18px;margin-bottom:16px;font-size:15px}
-.summary .by{font-size:11.5px;color:var(--muted);margin-top:9px}
-details{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:13px 17px;margin-top:6px}
-summary{cursor:pointer;font-weight:600;font-size:14.5px}
-details table{width:100%;border-collapse:collapse;margin-top:11px;font-size:14px}
-details td{padding:6px 0;border-bottom:1px solid #f0f2f1;color:var(--muted)}
-details td:last-child{text-align:right;color:var(--ink);font-weight:600}
-.note{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:17px}
-.disc{margin-top:26px;padding:14px 16px;background:#fff;border:1px solid var(--line);
-  border-radius:var(--radius);font-size:13px;color:var(--muted)}
-footer{margin-top:30px;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.7}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid #fff6;border-top-color:#fff;
-  border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px;margin-right:7px}
+.val{text-align:right;flex:none;white-space:nowrap}
+.num{font-size:23px;font-weight:700;letter-spacing:-.03em}
+.unit{color:var(--faint);font-size:12.5px;margin-left:3px;font-weight:450}
+
+/* the range bar: where their value sits against the lab's own interval */
+.range{margin:15px 0 3px}
+.track{position:relative;height:6px;border-radius:99px;background:var(--hair)}
+.band{position:absolute;top:0;bottom:0;border-radius:99px;background:var(--wash);
+  border:1px solid #cfe2dc}
+.pin{position:absolute;top:-4px;width:3px;height:14px;border-radius:2px;transform:translateX(-50%)}
+.pin.high{background:var(--high)}.pin.low{background:var(--low)}
+.ends{display:flex;justify-content:space-between;margin-top:7px;font-size:11.5px;color:var(--faint)}
+.ends b{font-weight:600;color:var(--body)}
+
+.what{margin:15px 0 0;font-size:15px;color:#223431}
+.means{margin:8px 0 0;font-size:15px;color:#223431}
+.ask{margin:14px 0 0;padding:12px 13px;background:var(--wash);border-radius:11px;font-size:14.5px}
+.ask b{font-weight:650;display:block;margin-bottom:2px;font-size:12.5px;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--brand)}
+.src{margin:11px 0 0;font-size:11.5px;color:var(--faint);word-break:break-word}
+
+details.normals{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 19px;box-shadow:var(--shadow)}
+details.normals summary{cursor:pointer;font-weight:600;font-size:14.5px;color:var(--body);
+  list-style:none}
+details.normals summary::-webkit-details-marker{display:none}
+details.normals summary::after{content:"";float:right;border:solid var(--faint);
+  border-width:0 1.6px 1.6px 0;padding:3px;transform:rotate(45deg);margin-top:4px}
+details.normals[open] summary::after{transform:rotate(-135deg);margin-top:7px}
+.nrow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;
+  border-top:1px solid var(--hair);font-size:14.5px}
+.nrow span{color:var(--body)}.nrow b{font-weight:620}
+
+/* ---------- Niqo ---------- */
+.niqo{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:19px 20px;margin-top:12px;box-shadow:var(--shadow)}
+.niqo h3{margin:0 0 3px;font-size:15.5px;font-weight:650;letter-spacing:-.012em;
+  display:flex;align-items:center;gap:7px}
+.niqo h3 .dot{width:7px;height:7px;border-radius:50%;background:var(--brand);flex:none}
+.niqo .sub{margin:0 0 14px;font-size:13.5px;color:var(--faint)}
+.qs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.ask-row{display:flex;gap:8px}
+.ask-row input{flex:1;min-width:0;border:1px solid var(--line);border-radius:11px;
+  padding:12px 13px;font:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+.ask-row input:focus{outline:2px solid var(--wash);border-color:var(--brand)}
+.ask-row button{border:0;background:var(--brand);color:#fff;border-radius:11px;
+  padding:0 17px;font:inherit;font-weight:600;cursor:pointer}
+.ask-row button:disabled{opacity:.55;cursor:default}
+.turn{margin-top:14px;padding-top:14px;border-top:1px solid var(--hair)}
+.q{font-size:14px;color:var(--faint);margin:0 0 6px}
+.a{font-size:15px;margin:0;color:#223431}
+
+.foot{margin-top:24px;font-size:12.5px;color:var(--faint);line-height:1.65}
+.foot strong{color:var(--body);font-weight:600}
+.spin{width:14px;height:14px;border:2px solid #ffffff55;border-top-color:#fff;
+  border-radius:50%;animation:s .7s linear infinite;display:inline-block}
 @keyframes s{to{transform:rotate(360deg)}}
-@media (max-width:520px){h1{font-size:23px}.wrap{padding:20px 14px 60px}}
+@media (max-width:540px){
+  h1{font-size:25px}.wrap{padding:18px 16px 64px}.num{font-size:21px}
+  .verdict,.card,.niqo,details.normals{border-radius:14px}
+}
 </style>
 
 <div class="wrap">
   <header>
-    <div class="brand"><span class="dot"></span> Read My Report</div>
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" fill="#0b4f45"/>
+        <path d="M9 17h4l2-5 3 9 2-4h3" fill="none" stroke="#fff" stroke-width="2.4"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Read My Report
+    </div>
     <div class="lang" role="group" aria-label="Language">
       <button id="en" aria-pressed="true">English</button>
       <button id="hi" aria-pressed="false">हिंदी</button>
@@ -88,55 +158,81 @@ footer{margin-top:30px;font-size:12.5px;color:var(--muted);text-align:center;lin
   </header>
 
   <main id="start">
-    <h1>Your blood test, in words you can use.</h1>
-    <p class="lede">Upload the report your lab gave you. You will see which values are
-      outside <em>your lab's own</em> range, what each one measures, and what to ask your
-      doctor. Your report is not stored.</p>
+    <h1 id="h1">Your blood test, in words you can use.</h1>
+    <p class="lede" id="lede">See which values fall outside <em>your own lab's</em> range,
+      what each one measures, and what to ask your doctor.</p>
 
     <div class="drop" id="drop">
       <button class="btn" id="pick">Choose your report</button>
+      <p class="hint" id="hint">PDF or a photo of the printout. Nothing is stored.</p>
       <input type="file" id="file" accept="application/pdf,image/jpeg,image/png" class="hidden">
-      <p>PDF or a photo of the printout. Drag it here if you like.</p>
-      <div class="samples">No report handy? Try a sample:
-        <button data-s="cbc">blood count</button>·<button data-s="thyroid">thyroid</button>·<button data-s="sugar-lipid">sugar &amp; cholesterol</button>·<button data-s="normal">all normal</button>
+      <div class="samples">
+        <span id="trylabel">Or try one:</span>
+        <button class="chip" data-s="sugar-lipid">Sugar &amp; cholesterol</button>
+        <button class="chip" data-s="thyroid">Thyroid</button>
+        <button class="chip" data-s="cbc">Blood count</button>
+        <button class="chip" data-s="normal">All normal</button>
       </div>
     </div>
   </main>
 
   <section id="out" class="hidden"></section>
 
-  <div class="disc" id="disc"></div>
-  <footer>
-    Built by Team Clauduss for the Campus to Cloud Hackathon, Techfest IIT Bombay 2026–27.<br>
-    Runs on AWS. Sample reports use invented patients.
-  </footer>
+  <p class="foot" id="foot"></p>
 </div>
 
+<script src="config.js"></script>
 <script>
-const API = window.READ_MY_REPORT_API || "";   // set by config.js when deployed
-let lang = "English";
+const API = window.READ_MY_REPORT_API || "";
+let lang = "English", brief = null, lastSample = null;
 
 const $ = s => document.querySelector(s);
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const paras = s => esc(s).trim().split(/\n{2,}/)
+  .map(x => `<p style="margin:0 0 9px">${x.replace(/\n/g," ")}</p>`).join("")
+  .replace(/<p style="margin:0 0 9px">([^<]*)<\/p>$/, '<p style="margin:0">$1</p>');
 
-const TEXT = {
+const T = {
   English: {
-    outside: "Outside your lab's range", normal: "Within range",
-    none: "Every value on this report is inside your lab's own range.",
-    ask: "Ask your doctor", what: "", measured: "values read",
-    loading: "Reading your report…", sourceLabel: "Source",
-    high: "Higher than range", low: "Lower than range",
-    showNormal: n => `Show the ${n} values that are within range`
+    h1: "Your blood test, in words you can use.",
+    lede: 'See which values fall outside <em>your own lab\'s</em> range, what each one measures, and what to ask your doctor.',
+    pick: "Choose your report", hint: "PDF or a photo of the printout. Nothing is stored.",
+    try: "Or try one:", outside: "Outside your lab's range", of: n => `of ${n} values read`,
+    allgood: "Every value on this report is inside your lab's own range.",
+    normals: n => n === 1 ? "The 1 value within range" : `The ${n} values within range`, ask: "Ask your doctor", src: "Source",
+    high: "Higher", low: "Lower", reading: "Reading your report",
+    niqoH: "Ask Niqo about this report", niqoS: "Niqo can only use what is on this report. It explains; it does not diagnose.",
+    placeholder: "Ask a question about your results…", send: "Ask",
+    qs: ["What does TSH mean?", "Which result matters most?", "What should I ask my doctor?"],
+    foot: "<strong>This is not a diagnosis and not medical advice.</strong> It explains what is printed on your report. Only your doctor can tell you what it means for you.",
+    fail: "Could not read that file. A clearer photo, or the PDF your lab emailed, usually works."
   },
   Hindi: {
-    outside: "आपकी लैब की सीमा से बाहर", normal: "सीमा के भीतर",
-    none: "इस रिपोर्ट की हर वैल्यू आपकी लैब की अपनी सीमा के भीतर है।",
-    ask: "डॉक्टर से यह पूछें", what: "", measured: "वैल्यू पढ़ी गईं",
-    loading: "आपकी रिपोर्ट पढ़ी जा रही है…", sourceLabel: "स्रोत",
-    high: "सीमा से ऊपर", low: "सीमा से नीचे",
-    showNormal: n => `सीमा के भीतर वाली ${n} वैल्यू दिखाएँ`
+    h1: "आपकी रिपोर्ट, आसान शब्दों में।",
+    lede: "देखिए कौन-सी वैल्यू <em>आपकी अपनी लैब</em> की सीमा से बाहर हैं, हर एक क्या मापती है, और डॉक्टर से क्या पूछें।",
+    pick: "अपनी रिपोर्ट चुनें", hint: "PDF या प्रिंटआउट की फ़ोटो। कुछ भी सेव नहीं होता।",
+    try: "या यह देखें:", outside: "आपकी लैब की सीमा से बाहर", of: n => `${n} में से`,
+    allgood: "इस रिपोर्ट की हर वैल्यू आपकी लैब की अपनी सीमा के भीतर है।",
+    normals: n => `सीमा के भीतर वाली ${n} वैल्यू`, ask: "डॉक्टर से यह पूछें", src: "स्रोत",
+    high: "ज़्यादा", low: "कम", reading: "रिपोर्ट पढ़ी जा रही है",
+    niqoH: "Niqo से इस रिपोर्ट के बारे में पूछें", niqoS: "Niqo सिर्फ़ इसी रिपोर्ट की बात कर सकता है। यह समझाता है, बीमारी नहीं बताता।",
+    placeholder: "अपने नतीजों के बारे में सवाल पूछें…", send: "पूछें",
+    qs: ["TSH का मतलब क्या है?", "कौन-सा नतीजा सबसे ज़रूरी है?", "डॉक्टर से क्या पूछूँ?"],
+    foot: "<strong>यह कोई निदान या चिकित्सकीय सलाह नहीं है।</strong> यह सिर्फ़ आपकी रिपोर्ट में लिखी बात समझाता है। इसका आपके लिए क्या मतलब है, यह केवल आपका डॉक्टर बता सकता है।",
+    fail: "यह फ़ाइल पढ़ी नहीं जा सकी। साफ़ फ़ोटो या लैब की भेजी PDF आज़माएँ।"
   }
 };
+
+function chrome(){
+  const t = T[lang];
+  $("#h1").textContent = t.h1;
+  $("#lede").innerHTML = t.lede;
+  $("#pick").textContent = t.pick;
+  $("#hint").textContent = t.hint;
+  $("#trylabel").textContent = t.try;
+  $("#foot").innerHTML = t.foot;
+}
 
 $("#pick").onclick = () => $("#file").click();
 $("#file").onchange = e => e.target.files[0] && send(e.target.files[0]);
@@ -146,111 +242,161 @@ document.querySelectorAll("[data-s]").forEach(b => b.onclick = () => sample(b.da
 
 const drop = $("#drop");
 ["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => {
-  e.preventDefault(); drop.classList.add("over");
-}));
+  e.preventDefault(); drop.classList.add("over"); }));
 ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => {
-  e.preventDefault(); drop.classList.remove("over");
-}));
+  e.preventDefault(); drop.classList.remove("over"); }));
 drop.addEventListener("drop", e => e.dataTransfer.files[0] && send(e.dataTransfer.files[0]));
 
 function setLang(l){
   lang = l;
   $("#en").setAttribute("aria-pressed", l === "English");
   $("#hi").setAttribute("aria-pressed", l === "Hindi");
-  if (window.lastSample) sample(window.lastSample);
-  else if (window.lastBrief) render(window.lastBrief);
+  chrome();
+  if (lastSample) sample(lastSample);
+  else if (brief) render(brief);
 }
 
 function busy(on){
   $("#pick").disabled = on;
-  $("#pick").innerHTML = on ? `<span class="spin"></span>${TEXT[lang].loading}` : "Choose your report";
+  $("#pick").innerHTML = on
+    ? `<span class="spin"></span>${T[lang].reading}…`
+    : T[lang].pick;
 }
 
 async function send(file){
-  busy(true);
+  busy(true); lastSample = null;
   try{
-    const body = await file.arrayBuffer();
     const r = await fetch(`${API}/read?language=${encodeURIComponent(lang)}`, {
-      method: "POST", headers: {"Content-Type": file.type || "application/pdf"}, body });
+      method:"POST", headers:{"Content-Type": file.type || "application/pdf"},
+      body: await file.arrayBuffer() });
     render(await r.json());
-  }catch(err){
-    $("#out").classList.remove("hidden");
-    $("#out").innerHTML = `<div class="note">Could not read that file. ${esc(err.message)}</div>`;
-  }finally{ busy(false); }
+  }catch(e){ fail(); }
+  finally{ busy(false); }
 }
 
 async function sample(name){
-  busy(true);
-  window.lastSample = name;
+  busy(true); lastSample = name;
   try{
-    // One file per language, so a sample shows the same written answer the live
-    // service produces rather than a stored English one translated on the page.
-    let r = await fetch(`samples/${name}.${lang}.json`);
-    if (!r.ok) r = await fetch(`samples/${name}.json`);
+    const r = await fetch(`samples/${name}.${lang}.json`);
     render(await r.json());
-  }catch(err){
-    $("#out").classList.remove("hidden");
-    $("#out").innerHTML = `<div class="note">Sample not found.</div>`;
-  }finally{ busy(false); }
+  }catch(e){ fail(); }
+  finally{ busy(false); }
 }
 
-function showDisc(text){
-  const d = $("#disc");
-  d.textContent = text || "";
-  d.style.display = text ? "" : "none";
+function fail(){
+  $("#out").classList.remove("hidden");
+  $("#out").innerHTML = `<div class="verdict"><p>${T[lang].fail}</p></div>`;
 }
-showDisc("");
 
-function render(brief){
-  window.lastBrief = brief;
-  const t = TEXT[lang];
-  const out = $("#out");
+/* Where the value sits against the lab's own interval. Both ends known -> show the
+   band and the pin in scale. One end open -> show the side that exists. */
+function rangeBar(r){
+  const lo = r.low, hi = r.high, v = r.value;
+  let min, max, bandL, bandR;
+  if (lo != null && hi != null){
+    const pad = Math.max((hi - lo) * 0.85, Math.abs(v - (v > hi ? hi : lo)) * 1.3) || 1;
+    min = Math.min(lo - pad, v - pad * 0.25); max = Math.max(hi + pad, v + pad * 0.25);
+    bandL = (lo - min) / (max - min); bandR = (hi - min) / (max - min);
+  } else if (hi != null){
+    min = 0; max = Math.max(hi * 1.9, v * 1.2); bandL = 0; bandR = hi / (max - min);
+  } else if (lo != null){
+    min = 0; max = Math.max(lo * 2.2, v * 1.4); bandL = lo / (max - min); bandR = 1;
+  } else return "";
+  const at = Math.min(Math.max((v - min) / (max - min), .02), .98);
+  const ends = lo != null && hi != null
+    ? `<span><b>${lo}</b> low</span><span>high <b>${hi}</b></span>`
+    : (hi != null ? `<span></span><span>lab's limit <b>${hi}</b></span>`
+                  : `<span>lab's floor <b>${lo}</b></span><span></span>`);
+  return `<div class="range"><div class="track">
+      <div class="band" style="left:${bandL*100}%;right:${(1-bandR)*100}%"></div>
+      <div class="pin ${r.status}" style="left:${at*100}%"></div>
+    </div><div class="ends">${ends}</div></div>`;
+}
+
+function render(data){
+  brief = data; const t = T[lang], out = $("#out");
   out.classList.remove("hidden");
-  if (brief.error || brief.note){
-    out.innerHTML = `<div class="note">${esc(brief.note || brief.error)}</div>`;
-    showDisc(brief.disclaimer);
+  if (data.error || data.note){
+    out.innerHTML = `<div class="verdict"><p>${esc(data.note || data.error)}</p></div>`;
     return;
   }
-  const c = brief.counts || {};
-  let html = "";
+  const c = data.counts || {}; let h = "";
 
-  if (brief.summary){
-    html += `<div class="summary">${esc(brief.summary).trim().split(/\n{2,}/)
-      .map(x => `<p style="margin:0 0 9px">${x.replace(/\n/g," ")}</p>`).join("")}
-      <div class="by">Written by ${esc(brief.summary_by || "Amazon Bedrock")} from the
-      sourced notes below.</div></div>`;
-  }
-
-  html += `<div class="bar"><h2>${t.outside}</h2>
-    <span class="count">${c.outside} of ${c.total} ${t.measured}</span></div>`;
-
-  if (!brief.outside.length){
-    html += `<div class="note">${t.none}</div>`;
-  }
-  for (const item of brief.outside){
-    const r = item.result, n = item.note || {};
-    html += `<div class="card">
-      <span class="tag ${r.status}">${r.status === "high" ? t.high : t.low}</span>
-      <div class="row">
-        <div class="test">${esc(r.test)}</div>
-        <div class="val"><span class="num">${esc(r.raw_value)}</span><span class="unit">${esc(r.unit)}</span>
-          <div class="ref">your lab: ${esc(r.reference)}</div></div>
-      </div>
-      ${n.what ? `<p class="what">${esc(n.what)}</p>` : ""}
-      ${n.means ? `<p class="means">${esc(n.means)}</p>` : ""}
-      ${n.ask ? `<div class="ask"><b>${t.ask}:</b> ${esc(n.ask)}</div>` : ""}
-      ${n.source ? `<div class="src">${t.sourceLabel}: ${esc(n.source)}</div>` : ""}
+  if (!data.outside.length){
+    h += `<div class="verdict"><div class="allgood"><div class="tick">✓</div>
+      <p style="margin:0">${t.allgood}</p></div></div>`;
+  } else {
+    h += `<div class="verdict">
+      <div class="count"><span class="n">${c.outside}</span>
+        <span class="of">${t.of(c.total)}</span></div>
+      ${data.summary ? paras(data.summary) : ""}
+      ${data.summary ? `<div class="by">${esc(data.summary_by || "")}</div>` : ""}
     </div>`;
   }
 
-  if (brief.normal && brief.normal.length){
-    html += `<details><summary>${t.showNormal(brief.normal.length)}</summary><table>` +
-      brief.normal.map(r => `<tr><td>${esc(r.test)}</td>
-        <td>${esc(r.raw_value)} ${esc(r.unit)}</td></tr>`).join("") +
-      `</table></details>`;
+  if (data.outside.length){
+    h += `<div class="sec"><h2>${t.outside}</h2></div>`;
+    for (const it of data.outside){
+      const r = it.result, n = it.note || {};
+      h += `<div class="card">
+        <span class="tag ${r.status}">${r.status === "high" ? t.high : t.low}</span>
+        <div class="top">
+          <div class="test">${esc(r.test)}</div>
+          <div class="val"><span class="num">${esc(r.raw_value)}</span><span class="unit">${esc(r.unit)}</span></div>
+        </div>
+        ${rangeBar(r)}
+        ${n.what ? `<p class="what">${esc(n.what)}</p>` : ""}
+        ${n.means ? `<p class="means">${esc(n.means)}</p>` : ""}
+        ${n.ask ? `<div class="ask"><b>${t.ask}</b>${esc(n.ask)}</div>` : ""}
+        ${n.source ? `<div class="src">${t.src}: ${esc(n.source)}</div>` : ""}
+      </div>`;
+    }
   }
-  out.innerHTML = html;
-  showDisc(brief.disclaimer);
+
+  if (data.normal && data.normal.length){
+    h += `<details class="normals"><summary>${t.normals(data.normal.length)}</summary>`
+      + data.normal.map(r => `<div class="nrow"><span>${esc(r.test)}</span>
+          <b>${esc(r.raw_value)} ${esc(r.unit)}</b></div>`).join("") + `</details>`;
+  }
+
+  h += `<div class="niqo">
+    <h3><span class="dot"></span>${t.niqoH}</h3>
+    <p class="sub">${t.niqoS}</p>
+    <div class="qs">${t.qs.map(q => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join("")}</div>
+    <div class="ask-row">
+      <input id="q" placeholder="${esc(t.placeholder)}" maxlength="300" autocomplete="off">
+      <button id="qsend">${t.send}</button>
+    </div>
+    <div id="turns"></div>
+  </div>`;
+
+  out.innerHTML = h;
+  out.querySelectorAll("[data-q]").forEach(b => b.onclick = () => askNiqo(b.dataset.q));
+  $("#qsend").onclick = () => askNiqo($("#q").value);
+  $("#q").addEventListener("keydown", e => { if (e.key === "Enter") askNiqo($("#q").value); });
   out.scrollIntoView({behavior:"smooth", block:"start"});
 }
+
+async function askNiqo(question){
+  question = (question || "").trim();
+  if (!question || !brief) return;
+  const turns = $("#turns"), btn = $("#qsend");
+  btn.disabled = true; $("#q").value = "";
+  const el = document.createElement("div");
+  el.className = "turn";
+  el.innerHTML = `<p class="q">${esc(question)}</p><p class="a"><span class="spin"
+    style="border-color:#cfd8d5;border-top-color:#0b4f45"></span></p>`;
+  turns.appendChild(el);
+  try{
+    const r = await fetch(`${API}/ask`, {method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({brief, question, language: lang})});
+    const d = await r.json();
+    el.querySelector(".a").innerHTML = d.answer ? paras(d.answer)
+      : esc(T[lang].fail);
+  }catch(e){ el.querySelector(".a").textContent = T[lang].fail; }
+  finally{ btn.disabled = false; }
+}
+
+chrome();
 </script>

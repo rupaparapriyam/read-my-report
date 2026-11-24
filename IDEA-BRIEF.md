@@ -43,6 +43,14 @@ Upload the report — the PDF the lab emailed, or a photo of the printout.
    short paragraph, in English or Hindi. It is given the facts; it is not asked to
    supply them.
 
+Each result is also drawn against the lab's own interval — the band is the normal range,
+the pin is where this person sits — so the shape of the answer lands before the words do.
+
+Then they can ask. **Niqo**, our assistant, answers follow-up questions using only the
+results on their report and the sourced notes behind them. Ask it whether you have a
+condition and it declines and restates the numbers; ask it what to take and it sends you
+to your doctor.
+
 It explains. It does not diagnose, it names no medicine, and every answer ends by
 pointing at a doctor.
 
@@ -65,7 +73,8 @@ that produces reports like the ones this tool reads,
 so we know their layouts, their quirks, and how a lab actually prints a reference
 interval. That is the part a team without this background gets wrong.
 
-**Niqo** is our AI assistant project, which taught us the discipline this needed:
+**Niqo** is our AI assistant, and it is in this build answering the follow-up questions.
+Building it taught us the discipline this needed:
 grounding an AI in sourced material rather than letting it answer from memory, keeping
 a hard cap on per-day spend, and falling back gracefully when the model is unavailable.
 All three ideas are in this build.
