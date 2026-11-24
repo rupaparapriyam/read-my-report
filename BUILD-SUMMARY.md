@@ -75,11 +75,18 @@ disease?" it declines and restates what the numbers show; asked "मुझे �
 चाहिए?" it declines and sends them to their doctor. The report travels from the browser
 with the question, because nothing is stored server-side to look up.
 
-**The range bar does the explaining before the words do.** Each result is drawn against
-the lab's own interval: the band is the normal range, the pin is where this person
-actually sits. Someone who reads no English at all can see that 8.42 is far to the right
-of 0.55–4.78 while 0.81 is just left of 0.89–1.76. It is computed from numbers already
-on the page, costs nothing, and is the fastest part of the answer to understand.
+**The picture carries the answer; the words only confirm it.** The first thing on the
+page is every value on the report as one chart — a row per test, the band being the
+lab's own range and the pin being where this person sits. Seven tests take about two
+seconds to read, and a person who reads no English can still see which pins fall outside
+their bands. The same drawing repeats under each flagged result at larger size.
+
+Everything written is then kept deliberately short. The paragraph above the chart is
+capped at two sentences, because the chart has already said the rest. Each flagged
+result gets one line on what it can mean; what to ask the doctor and the source sit
+behind a "More" that most people will never need to open. Earlier drafts put all of it
+on screen at once and the page became a wall of text nobody would read — which, for a
+tool whose whole purpose is being understood, is the same as failing.
 
 **Hindi is a real translation, not a live one.** The sourced notes exist in Hindi as a
 committed file, `backend/glossary.hi.json`, translated once from our own English

@@ -66,6 +66,30 @@ h1{font-size:30px;line-height:1.18;letter-spacing:-.028em;margin:0 0 10px;font-w
 .allgood .tick{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ok);
   color:#fff;display:grid;place-items:center;font-size:12px;margin-top:1px}
 
+/* ---------- the whole report at a glance ---------- */
+.glance{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:6px 20px 14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.grow{display:grid;grid-template-columns:minmax(96px,1.15fr) minmax(90px,1.5fr) auto;
+  gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--hair)}
+.grow:first-child{border-top:0}
+.gname{font-size:14px;color:var(--body);overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.grow.out .gname{color:var(--ink);font-weight:600}
+.gval{font-size:14px;font-weight:650;text-align:right;white-space:nowrap}
+.grow.out.high .gval{color:var(--high)}
+.grow.out.low .gval{color:var(--low)}
+.gtrack{position:relative;height:5px;border-radius:99px;background:var(--hair)}
+.gband{position:absolute;top:0;bottom:0;border-radius:99px;background:#cfe2dc}
+.gpin{position:absolute;top:-3.5px;width:3px;height:12px;border-radius:2px;
+  transform:translateX(-50%);background:var(--ok)}
+.gpin.high{background:var(--high)}.gpin.low{background:var(--low)}
+.gkey{display:flex;gap:14px;align-items:center;margin-top:12px;padding-top:11px;
+  border-top:1px solid var(--hair);font-size:11.5px;color:var(--faint)}
+.gkey i{display:inline-block;width:14px;height:5px;border-radius:99px;background:#cfe2dc;
+  margin-right:5px;vertical-align:1px}
+.gkey b{display:inline-block;width:3px;height:11px;border-radius:2px;background:var(--high);
+  margin-right:5px;vertical-align:-2px}
+
 /* ---------- a result ---------- */
 .sec{display:flex;align-items:baseline;gap:9px;margin:26px 0 10px}
 .sec h2{font-size:12px;margin:0;font-weight:680;letter-spacing:.07em;text-transform:uppercase;
@@ -92,12 +116,19 @@ h1{font-size:30px;line-height:1.18;letter-spacing:-.028em;margin:0 0 10px;font-w
 .ends{display:flex;justify-content:space-between;margin-top:7px;font-size:11.5px;color:var(--faint)}
 .ends b{font-weight:600;color:var(--body)}
 
-.what{margin:15px 0 0;font-size:15px;color:#223431}
-.means{margin:8px 0 0;font-size:15px;color:#223431}
-.ask{margin:14px 0 0;padding:12px 13px;background:var(--wash);border-radius:11px;font-size:14.5px}
-.ask b{font-weight:650;display:block;margin-bottom:2px;font-size:12.5px;
+.means{margin:13px 0 0;font-size:15.2px;color:#223431}
+.more{margin-top:12px}
+.more summary{cursor:pointer;list-style:none;font-size:13px;font-weight:600;
+  color:var(--brand);display:inline-flex;align-items:center;gap:5px}
+.more summary::-webkit-details-marker{display:none}
+.more summary::after{content:"";border:solid var(--brand);border-width:0 1.5px 1.5px 0;
+  padding:2.5px;transform:rotate(45deg);margin-bottom:2px}
+.more[open] summary::after{transform:rotate(-135deg);margin-bottom:-1px}
+.what{margin:12px 0 0;font-size:14.5px;color:var(--body)}
+.ask{margin:11px 0 0;padding:12px 13px;background:var(--wash);border-radius:11px;font-size:14.5px}
+.ask b{font-weight:650;display:block;margin-bottom:2px;font-size:12px;
   text-transform:uppercase;letter-spacing:.05em;color:var(--brand)}
-.src{margin:11px 0 0;font-size:11.5px;color:var(--faint);word-break:break-word}
+.src{margin:10px 0 0;font-size:11px;color:var(--faint);word-break:break-word}
 
 details.normals{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
   padding:15px 19px;box-shadow:var(--shadow)}
@@ -114,10 +145,12 @@ details.normals[open] summary::after{transform:rotate(-135deg);margin-top:7px}
 /* ---------- Niqo ---------- */
 .niqo{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
   padding:19px 20px;margin-top:12px;box-shadow:var(--shadow)}
-.niqo h3{margin:0 0 3px;font-size:15.5px;font-weight:650;letter-spacing:-.012em;
-  display:flex;align-items:center;gap:7px}
-.niqo h3 .dot{width:7px;height:7px;border-radius:50%;background:var(--brand);flex:none}
-.niqo .sub{margin:0 0 14px;font-size:13.5px;color:var(--faint)}
+.niqo{display:flex;gap:13px}
+.avatar{flex:none;width:36px;height:36px;border-radius:11px;background:var(--brand);
+  display:grid;place-items:center;margin-top:1px}
+.niqo .body{flex:1;min-width:0}
+.niqo h3{margin:0 0 2px;font-size:15.5px;font-weight:650;letter-spacing:-.012em}
+.niqo .sub{margin:0 0 13px;font-size:13.3px;color:var(--faint)}
 .qs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
 .ask-row{display:flex;gap:8px}
 .ask-row input{flex:1;min-width:0;border:1px solid var(--line);border-radius:11px;
@@ -196,29 +229,33 @@ const paras = s => esc(s).trim().split(/\n{2,}/)
 const T = {
   English: {
     h1: "Your blood test, in words you can use.",
-    lede: 'See which values fall outside <em>your own lab\'s</em> range, what each one measures, and what to ask your doctor.',
+    lede: 'See what is outside <em>your own lab\'s</em> range, and what to ask your doctor.',
     pick: "Choose your report", hint: "PDF or a photo of the printout. Nothing is stored.",
-    try: "Or try one:", outside: "Outside your lab's range", of: n => `of ${n} values read`,
+    try: "Or try one:", outside: "What they mean", of: n => `of ${n} outside your lab's range`,
+    glance: "Every value on your report", inband: "your lab's range", you: "you",
+    detail: "More",
     allgood: "Every value on this report is inside your lab's own range.",
     normals: n => n === 1 ? "The 1 value within range" : `The ${n} values within range`, ask: "Ask your doctor", src: "Source",
     high: "Higher", low: "Lower", reading: "Reading your report",
-    niqoH: "Ask Niqo about this report", niqoS: "Niqo can only use what is on this report. It explains; it does not diagnose.",
+    niqoH: "Ask Niqo", niqoS: "Only about this report. It explains; it does not diagnose.",
     placeholder: "Ask a question about your results…", send: "Ask",
-    qs: ["What does TSH mean?", "Which result matters most?", "What should I ask my doctor?"],
+    q1: t => `What does ${t} mean?`, q2: "Which result matters most?", q3: "What should I ask my doctor?",
     foot: "<strong>This is not a diagnosis and not medical advice.</strong> It explains what is printed on your report. Only your doctor can tell you what it means for you.",
     fail: "Could not read that file. A clearer photo, or the PDF your lab emailed, usually works."
   },
   Hindi: {
     h1: "आपकी रिपोर्ट, आसान शब्दों में।",
-    lede: "देखिए कौन-सी वैल्यू <em>आपकी अपनी लैब</em> की सीमा से बाहर हैं, हर एक क्या मापती है, और डॉक्टर से क्या पूछें।",
+    lede: "देखिए क्या <em>आपकी अपनी लैब</em> की सीमा से बाहर है, और डॉक्टर से क्या पूछें।",
     pick: "अपनी रिपोर्ट चुनें", hint: "PDF या प्रिंटआउट की फ़ोटो। कुछ भी सेव नहीं होता।",
-    try: "या यह देखें:", outside: "आपकी लैब की सीमा से बाहर", of: n => `${n} में से`,
+    try: "या यह देखें:", outside: "इनका मतलब", of: n => `${n} में से, लैब की सीमा से बाहर`,
+    glance: "आपकी रिपोर्ट की हर वैल्यू", inband: "लैब की सीमा", you: "आप",
+    detail: "और",
     allgood: "इस रिपोर्ट की हर वैल्यू आपकी लैब की अपनी सीमा के भीतर है।",
     normals: n => `सीमा के भीतर वाली ${n} वैल्यू`, ask: "डॉक्टर से यह पूछें", src: "स्रोत",
     high: "ज़्यादा", low: "कम", reading: "रिपोर्ट पढ़ी जा रही है",
-    niqoH: "Niqo से इस रिपोर्ट के बारे में पूछें", niqoS: "Niqo सिर्फ़ इसी रिपोर्ट की बात कर सकता है। यह समझाता है, बीमारी नहीं बताता।",
+    niqoH: "Niqo से पूछें", niqoS: "सिर्फ़ इसी रिपोर्ट के बारे में। यह समझाता है, बीमारी नहीं बताता।",
     placeholder: "अपने नतीजों के बारे में सवाल पूछें…", send: "पूछें",
-    qs: ["TSH का मतलब क्या है?", "कौन-सा नतीजा सबसे ज़रूरी है?", "डॉक्टर से क्या पूछूँ?"],
+    q1: t => `${t} का मतलब क्या है?`, q2: "कौन-सा नतीजा सबसे ज़रूरी है?", q3: "डॉक्टर से क्या पूछूँ?",
     foot: "<strong>यह कोई निदान या चिकित्सकीय सलाह नहीं है।</strong> यह सिर्फ़ आपकी रिपोर्ट में लिखी बात समझाता है। इसका आपके लिए क्या मतलब है, यह केवल आपका डॉक्टर बता सकता है।",
     fail: "यह फ़ाइल पढ़ी नहीं जा सकी। साफ़ फ़ोटो या लैब की भेजी PDF आज़माएँ।"
   }
@@ -288,9 +325,10 @@ function fail(){
   $("#out").innerHTML = `<div class="verdict"><p>${T[lang].fail}</p></div>`;
 }
 
-/* Where the value sits against the lab's own interval. Both ends known -> show the
-   band and the pin in scale. One end open -> show the side that exists. */
-function rangeBar(r){
+/* Where a value sits against the lab's own interval, as fractions of a track.
+   Both ends known -> a band with room either side. One end open -> the side that
+   exists. Returns null when the report printed no usable range. */
+function geom(r){
   const lo = r.low, hi = r.high, v = r.value;
   let min, max, bandL, bandR;
   if (lo != null && hi != null){
@@ -301,16 +339,54 @@ function rangeBar(r){
     min = 0; max = Math.max(hi * 1.9, v * 1.2); bandL = 0; bandR = hi / (max - min);
   } else if (lo != null){
     min = 0; max = Math.max(lo * 2.2, v * 1.4); bandL = lo / (max - min); bandR = 1;
-  } else return "";
-  const at = Math.min(Math.max((v - min) / (max - min), .02), .98);
+  } else return null;
+  return {bandL, bandR, at: Math.min(Math.max((v - min) / (max - min), .02), .98)};
+}
+
+/* One compact row per test: the whole report readable without reading. */
+function glance(data){
+  const t = T[lang];
+  const rows = [...data.outside.map(i => i.result), ...(data.normal || [])];
+  const body = rows.map(r => {
+    const g = geom(r);
+    const out = r.status === "high" || r.status === "low";
+    return `<div class="grow ${out ? "out " + r.status : ""}">
+      <div class="gname">${esc(r.test)}</div>
+      ${g ? `<div class="gtrack">
+          <div class="gband" style="left:${g.bandL*100}%;right:${(1-g.bandR)*100}%"></div>
+          <div class="gpin ${r.status}" style="left:${g.at*100}%"></div>
+        </div>` : `<div></div>`}
+      <div class="gval">${esc(r.raw_value)}<span class="unit">${esc(r.unit)}</span></div>
+    </div>`;
+  }).join("");
+  return `<div class="glance">${body}
+    <div class="gkey"><span><i></i>${t.inband}</span><span><b></b>${t.you}</span></div>
+  </div>`;
+}
+
+function rangeBar(r){
+  const g = geom(r);
+  if (!g) return "";
+  const lo = r.low, hi = r.high;
   const ends = lo != null && hi != null
-    ? `<span><b>${lo}</b> low</span><span>high <b>${hi}</b></span>`
-    : (hi != null ? `<span></span><span>lab's limit <b>${hi}</b></span>`
-                  : `<span>lab's floor <b>${lo}</b></span><span></span>`);
+    ? `<span><b>${lo}</b></span><span><b>${hi}</b></span>`
+    : (hi != null ? `<span></span><span><b>${hi}</b></span>`
+                  : `<span><b>${lo}</b></span><span></span>`);
   return `<div class="range"><div class="track">
-      <div class="band" style="left:${bandL*100}%;right:${(1-bandR)*100}%"></div>
-      <div class="pin ${r.status}" style="left:${at*100}%"></div>
+      <div class="band" style="left:${g.bandL*100}%;right:${(1-g.bandR)*100}%"></div>
+      <div class="pin ${r.status}" style="left:${g.at*100}%"></div>
     </div><div class="ends">${ends}</div></div>`;
+}
+
+/* Suggested questions name a test that is actually on this report. */
+function suggestions(data){
+  const t = T[lang];
+  const first = (data.outside[0] || {}).result;
+  const qs = [];
+  if (first) qs.push(t.q1(first.test));
+  if (data.outside.length > 1) qs.push(t.q2);
+  qs.push(t.q3);
+  return qs;
 }
 
 function render(data){
@@ -334,6 +410,12 @@ function render(data){
     </div>`;
   }
 
+  // The whole report as one picture, before a single explanation is read.
+  if (data.outside.length || (data.normal || []).length){
+    h += `<div class="sec"><h2>${t.glance}</h2></div>` + glance(data);
+  }
+
+  // Then, only for what is outside range: one line each, detail folded away.
   if (data.outside.length){
     h += `<div class="sec"><h2>${t.outside}</h2></div>`;
     for (const it of data.outside){
@@ -345,29 +427,35 @@ function render(data){
           <div class="val"><span class="num">${esc(r.raw_value)}</span><span class="unit">${esc(r.unit)}</span></div>
         </div>
         ${rangeBar(r)}
-        ${n.what ? `<p class="what">${esc(n.what)}</p>` : ""}
         ${n.means ? `<p class="means">${esc(n.means)}</p>` : ""}
-        ${n.ask ? `<div class="ask"><b>${t.ask}</b>${esc(n.ask)}</div>` : ""}
-        ${n.source ? `<div class="src">${t.src}: ${esc(n.source)}</div>` : ""}
+        ${(n.what || n.ask || n.source) ? `<details class="more"><summary>${t.detail}</summary>
+          ${n.what ? `<p class="what">${esc(n.what)}</p>` : ""}
+          ${n.ask ? `<div class="ask"><b>${t.ask}</b>${esc(n.ask)}</div>` : ""}
+          ${n.source ? `<div class="src">${t.src}: ${esc(n.source)}</div>` : ""}
+        </details>` : ""}
       </div>`;
     }
   }
 
-  if (data.normal && data.normal.length){
-    h += `<details class="normals"><summary>${t.normals(data.normal.length)}</summary>`
-      + data.normal.map(r => `<div class="nrow"><span>${esc(r.test)}</span>
-          <b>${esc(r.raw_value)} ${esc(r.unit)}</b></div>`).join("") + `</details>`;
-  }
-
   h += `<div class="niqo">
-    <h3><span class="dot"></span>${t.niqoH}</h3>
-    <p class="sub">${t.niqoS}</p>
-    <div class="qs">${t.qs.map(q => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join("")}</div>
-    <div class="ask-row">
-      <input id="q" placeholder="${esc(t.placeholder)}" maxlength="300" autocomplete="off">
-      <button id="qsend">${t.send}</button>
+    <div class="avatar" aria-hidden="true">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+        <path d="M5 9.5a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4H10l-4 3v-3.6A4 4 0 0 1 5 12.5z"
+              stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/>
+        <circle cx="10" cy="11" r="1.15" fill="#fff"/><circle cx="14" cy="11" r="1.15" fill="#fff"/>
+      </svg>
     </div>
-    <div id="turns"></div>
+    <div class="body">
+      <h3>${t.niqoH}</h3>
+      <p class="sub">${t.niqoS}</p>
+      <div class="qs">${suggestions(data).map(q =>
+        `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join("")}</div>
+      <div class="ask-row">
+        <input id="q" placeholder="${esc(t.placeholder)}" maxlength="300" autocomplete="off">
+        <button id="qsend">${t.send}</button>
+      </div>
+      <div id="turns"></div>
+    </div>
   </div>`;
 
   out.innerHTML = h;

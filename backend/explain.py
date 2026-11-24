@@ -120,13 +120,13 @@ Write a short, calm explanation in {language}. Rules you must follow:
 - Use ONLY the facts in NOTES below. Do not add any medical fact of your own.
 - Do not diagnose. Do not name a disease as theirs. Do not mention any medicine,
   dose, diet or treatment.
-- Plain sentences in ordinary paragraphs. No headings, no bullet points, no bold,
-  no asterisks, no hashes, no Markdown of any kind. The page shows your words as
-  they are.
-- The numbers are already on the page beside your text, so do not list them again.
-- Short sentences. No jargon unless the notes define it.
-- End with one line telling them to take the report to their doctor.
-- 110 words or fewer. Finish your last sentence.
+- TWO SENTENCES. No more. This sits above a page that already shows every number,
+  every range and every explanation, so your job is only to say what it adds up to.
+- Sentence one: what the results point at, in the plainest words, hedged.
+- Sentence two: tell them to take the report to their doctor.
+- Do not list the numbers. Do not name the tests one by one. They are on the page.
+- No headings, no bullets, no bold, no Markdown. Plain sentences.
+- A ten-year-old should follow it.
 
 THEIR RESULTS THAT ARE OUTSIDE THE LAB'S OWN RANGE:
 {findings}
@@ -150,7 +150,7 @@ def with_bedrock(brief, client=None, language="English"):
         notes = "\n".join(
             f"- {i['result']['test']}: {i['note']['what']} {i['note'].get('means') or ''}"
             for i in brief["outside"] if i.get("note"))
-        body = {"anthropic_version": "bedrock-2023-05-31", "max_tokens": 700,
+        body = {"anthropic_version": "bedrock-2023-05-31", "max_tokens": 300,
                 "temperature": 0.2,
                 "messages": [{"role": "user", "content": PROMPT.format(
                     language=language, findings=findings, notes=notes or "(none)")}]}
