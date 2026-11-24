@@ -5,6 +5,8 @@ each measures, and what to ask your doctor. In English or Hindi.
 
 Team Clauduss · Campus to Cloud Hackathon sponsored by AWS · Techfest IIT Bombay 2026–27
 
+**Live: https://d1h56y4dqpwrm0.cloudfront.net**
+
 It explains. It does not diagnose.
 
 ```bash
@@ -27,10 +29,10 @@ cd web && python3 -m http.server 8731    # then open http://127.0.0.1:8731
 | `backend/parse.py` | report text → test, value, unit, and **the range the lab printed**; decides high/low |
 | `backend/explain.py` | picks the sourced note for each flagged value; asks Bedrock to join them up |
 | `backend/glossary.json` | the only medical content, 13 tests, each with its source URL and review date |
-| `backend/handler.py` | the Lambda: Textract (or pdftotext locally) → parse → explain |
-| `backend/extract_local.py` | stands in for Textract so this runs with no AWS account |
+| `backend/handler.py` | the Lambda: read the PDF with pypdf, or a photo with Bedrock → parse → explain |
+| `backend/vendor/pypdf` | PDF reader, vendored so the Lambda needs no build step |
 | `web/index.html` | the whole front end, one file, no framework |
-| `infra/template.yaml` | the AWS stack: Lambda, API Gateway, Textract, Bedrock, S3, CloudFront |
+| `infra/template.yaml` | the AWS stack: Lambda, API Gateway, Bedrock, S3, CloudFront |
 | `samples/` | four invented patients, used to build and demo |
 
 ## Privacy

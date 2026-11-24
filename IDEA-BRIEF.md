@@ -29,8 +29,9 @@ else.
 
 Upload the report — the PDF the lab emailed, or a photo of the printout.
 
-1. **Amazon Textract** reads the page into lines of text, including photographs of
-   printouts, which is how most people actually have their report.
+1. The page is read into text: a PDF with **pypdf** inside the Lambda, a photograph by
+   **Amazon Bedrock**, which accepts images. (Textract was the first choice and is denied
+   on the AWS free plan, so the model does both jobs. See the build summary.)
 2. Our parser pulls out each row: test name, value, unit, and **the reference range the
    lab printed on that same row**.
 3. Each value is compared against *that lab's own range*. Nothing is compared to a

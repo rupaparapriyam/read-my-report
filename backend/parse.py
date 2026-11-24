@@ -62,10 +62,23 @@ def _bounds(reference):
     return None, None
 
 
+def tidy(text):
+    """Undo the small mangling that PDF text extraction does to numbers.
+
+    Extractors that preserve layout often widen a number into "9 .8" or "1 , 500"
+    because they are spacing glyphs, not reading digits. Joining those back together
+    costs nothing and rescues whole rows that would otherwise be skipped.
+    """
+    text = re.sub(r"(?<=\d)\s+\.\s*(?=\d)", ".", text)     # 9 .8   -> 9.8
+    text = re.sub(r"(?<=\d)\s*\.\s+(?=\d)", ".", text)     # 9. 8   -> 9.8
+    text = re.sub(r"(?<=\d)\s*,\s+(?=\d{3}\b)", ",", text)  # 1, 500 -> 1,500
+    return text
+
+
 def parse(text):
-    """Text from a report (Textract, or pdftotext locally) -> list of Result."""
+    """Text from a report (any extractor) -> list of Result."""
     results, seen = [], set()
-    for line in text.splitlines():
+    for line in tidy(text).splitlines():
         if SKIP.search(line):
             continue
         m = ROW.match(line.rstrip())

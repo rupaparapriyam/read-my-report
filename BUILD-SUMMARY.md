@@ -15,21 +15,46 @@ allows it, and nothing in the code changes.
 
 | Service | What it does here | Why this one |
 |---|---|---|
-| **Amazon Textract** | Reads the uploaded report into lines of text | Most people photograph a printout rather than keep the lab's PDF. Textract handles a phone photo, including a slightly skewed one, which plain PDF text extraction cannot. `DetectDocumentText` is the cheapest call that gives us what we need; we do not need table or form analysis because we re-join rows ourselves. |
-| **Amazon Bedrock** (Claude Haiku) | Writes the short plain-language paragraph, in English or Hindi | We need natural sentences in two languages without running a model ourselves. Haiku is the cheapest model that writes well, and Bedrock keeps the call inside our own AWS account rather than sending a medical document to a third-party API. We use **Claude Haiku 5.5** (`anthropic.claude-haiku-5-5`), taken from the Bedrock model catalogue in our region, where it is serverless and lists Hindi among its languages. It is given sourced notes and asked only to join them up. |
-| **AWS Lambda** (arm64) | Runs the parser and joins the two services together | The traffic is spiky — a person reads a report once, then not again for months. Paying per request rather than for an idle server is the honest shape for that. arm64 is cheaper per millisecond. 512 MB, 30 s timeout. |
-| **Amazon API Gateway** | The `/read` endpoint | Gives us binary upload handling (`BinaryMediaTypes`) and, more importantly, a **hard throttle of 10 requests a second**, so a mistake or a bad actor cannot run up a bill on a student account. |
-| **Amazon S3** | Two buckets: the page, and a scratch bucket | Both block all public access. The scratch bucket has a one-day expiry rule; reports are processed in memory and nothing is meant to persist, so the rule is a backstop rather than a feature. |
-| **Amazon CloudFront** | Serves the page over HTTPS | S3 alone cannot serve a private bucket over HTTPS. Origin Access Control means the bucket stays closed and only CloudFront can read it. `PriceClass_100` keeps it cheap. |
+| **Amazon Bedrock** (Claude Haiku 4.5) | Two jobs: reads a photographed report, and writes the plain-language paragraph in English or Hindi | One service doing both is what the free plan allowed, and it turned out to be the better design. It keeps a medical document inside our own AWS account instead of sending it to a third-party API, and the same model that reads the page also explains it. Haiku is the cheapest Claude tier. |
+| **AWS Lambda** (arm64) | Reads the PDF, runs the parser, calls Bedrock | A person reads a report once and then not for months, so the traffic is spiky and paying per request is the honest shape. arm64 is cheaper per millisecond. 512 MB, 30 s timeout, measured at 89 MB used. |
+| **Amazon API Gateway** (REST) | The `/read` endpoint | Handles binary upload (`BinaryMediaTypes`) and, more importantly, gives a **hard throttle of 10 requests a second**, so neither a bug nor a bad actor can run up a bill on a student account. |
+| **Amazon S3** | Two buckets: the page, and a scratch bucket | Both block all public access. The scratch bucket expires objects after a day; reports are handled in memory and nothing is meant to persist, so the rule is a backstop. |
+| **Amazon CloudFront** | Serves the page over HTTPS | S3 alone cannot serve a private bucket over HTTPS. Origin Access Control keeps the bucket closed to everything but CloudFront. |
+| **AWS CloudFormation / SAM** | The whole stack as one file | `infra/template.yaml` is the entire system. One command deploys it, one removes it, and a judge can read exactly what exists. |
+
+### Two constraints the free plan imposed, and what we did about them
+
+These are worth stating plainly, because they shaped the build.
+
+**Amazon Textract is denied outright.** It was our first choice for reading the page, and
+the first version used it. On this account the call returns *"not authorized to perform:
+textract:DetectDocumentText with an explicit deny in a service control policy"*. The AWS
+free plan simply does not include it. Rather than ask for a paid upgrade to read a page
+of text, we split the job: a PDF is read in-process with **pypdf**, pure Python and
+vendored into the deployment package, which is what the lab actually emails the patient;
+a photograph is read by **Bedrock**, which accepts images. We lost a service and gained a
+simpler system with one less thing to pay for.
+
+**The account is pinned to one region.** AWS's new free plan assigns a project to a
+single region, ours being ap-southeast-2; the console offers Mumbai only behind "upgrade
+your plan first". We stayed in Sydney rather than spend money to improve a latency
+number on a prototype. Moving is one flag at deploy time.
+
+A third, smaller one: in this region Claude models are served only through **inference
+profiles**, not bare model ids, and a profile can route a call to a neighbouring region.
+That means the IAM policy has to allow the profile in-region *and* the underlying model
+across regions — allowing only one fails with AccessDenied. The template does both, with
+a comment saying why.
 
 ## How the request flows
 
 ```
 browser ──POST /read──> API Gateway ──> Lambda
-                                         ├── Textract      (page -> lines of text)
-                                         ├── parse.py      (lines -> test, value, unit, range)
-                                         ├── glossary.json (sourced note per test)
-                                         └── Bedrock       (notes + numbers -> paragraph)
+                                         ├── pypdf          a PDF  -> text
+                                         │   or Bedrock     a photo -> text
+                                         ├── parse.py       text -> test, value, unit, range
+                                         ├── glossary.json  sourced note per flagged test
+                                         └── Bedrock        notes + numbers -> paragraph
                                          ──> JSON back to the browser
 ```
 
@@ -52,10 +77,10 @@ database, no user account, no analytics on the content. That is a deliberate
 simplification: the moment reports are stored, the thing needs consent flows and a
 retention policy it does not yet deserve.
 
-**Cost control was designed in, not added.** API Gateway throttling, arm64 Lambda, the
-cheapest Textract call, the cheapest Bedrock model, `PriceClass_100` CloudFront, a
-one-day expiry on the only bucket that can fill up, and a budget alert set on the
-account before any of this was created.
+**Cost control was designed in, not added.** API Gateway throttled at 10 requests a
+second, arm64 Lambda, the cheapest Claude tier, `PriceClass_100` CloudFront, a one-day
+expiry on the only bucket that can fill up, and a zero-spend budget alert created on the
+account *before* any of this existed. Reading one report costs a fraction of a rupee.
 
 ## What we reused from our own products, and what we did not
 
@@ -79,6 +104,7 @@ project. The four sample reports are invented people, generated by
 
 ## What we would do next
 
-Read the whole report rather than only rows with a numeric range; have the Hindi output
-reviewed by a clinician; and widen the glossary past thirteen tests, which is a
-sourcing job rather than an engineering one.
+Read the whole report rather than only rows with a printed numeric range; have the Hindi
+output checked by a clinician; and widen the glossary past thirteen tests, which is a
+sourcing job rather than an engineering one. If the account were ever upgraded, Textract
+would handle creased and badly lit photographs better than a vision model does.

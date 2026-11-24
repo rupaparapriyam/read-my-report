@@ -12,12 +12,14 @@ Globals:
 Parameters:
   BedrockModelId:
     Type: String
-    Default: anthropic.claude-haiku-5-5
+    Default: au.anthropic.claude-haiku-4-5-20251001-v1:0
     Description: >
-      The Bedrock model that writes the plain-language summary. Read off the Bedrock model
-      catalogue in ap-southeast-2 on 24 Nov 2026, where it is offered serverless and lists
-      Hindi among its languages. Note the region: this account's free plan is assigned to
-      ap-southeast-2 (Sydney) and cannot use other regions without a paid upgrade.
+      The Bedrock model that reads photographs and writes the plain-language summary.
+      It must be an INFERENCE PROFILE id, not a bare model id: in ap-southeast-2 the
+      Claude models are offered only through profiles, and a bare id returns
+      AccessDeniedException. This profile was confirmed working on this account on
+      24 Nov 2026; Haiku 5.5 is listed in the catalogue but is not available to a free
+      plan account.
 
 Resources:
 
@@ -62,19 +64,20 @@ Resources:
       Environment:
         Variables:
           BEDROCK_MODEL_ID: !Ref BedrockModelId
-          USE_TEXTRACT: '1'
           SCRATCH_BUCKET: !Ref ScratchBucket
       Policies:
+        # No Textract: the free plan denies it outright by service control policy, so
+        # PDFs are read in-process with pypdf and photographs are read by Bedrock.
         - Statement:
             - Effect: Allow
-              Action: [textract:DetectDocumentText]
-              Resource: '*'
-            - Effect: Allow
               Action: [bedrock:InvokeModel]
-              # Two forms, because a model called in-region and a model called through a
-              # global inference profile have different ARNs.
+              # An inference profile spreads a call across several regions: the "au."
+              # profile can land in ap-southeast-2 or ap-southeast-4. So the profile is
+              # allowed in this region, and the underlying model in any region the
+              # profile may route to. Both ARNs are needed; allowing only one fails with
+              # AccessDenied on the other.
               Resource:
-                - !Sub arn:aws:bedrock:${AWS::Region}::foundation-model/*
+                - !Sub arn:aws:bedrock:*::foundation-model/*
                 - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*
         - S3CrudPolicy: {BucketName: !Ref ScratchBucket}
       Events:
