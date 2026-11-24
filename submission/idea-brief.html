@@ -1,0 +1,76 @@
+<!doctype html><meta charset='utf-8'><title>Idea Brief — Read My Report</title><style>
+@page{size:A4;margin:19mm 17mm}
+body{font:11.2pt/1.55 -apple-system,"Helvetica Neue",Arial,sans-serif;color:#15201f;margin:0}
+h1{font-size:19pt;letter-spacing:-.02em;margin:0 0 6pt;line-height:1.2}
+h2{font-size:13pt;letter-spacing:-.01em;margin:17pt 0 5pt;padding-bottom:3pt;
+   border-bottom:.6pt solid #d8dedc}
+h3{font-size:11.6pt;margin:13pt 0 4pt}
+p{margin:0 0 8pt}
+ul,ol{margin:0 0 8pt;padding-left:16pt}
+li{margin:0 0 3pt}
+code{font:10pt ui-monospace,Menlo,monospace;background:#f1f4f3;padding:1pt 3pt;border-radius:3pt}
+a{color:#0e5e52;text-decoration:none}
+table{width:100%;border-collapse:collapse;margin:0 0 10pt;font-size:9.8pt}
+th{text-align:left;border-bottom:1pt solid #15201f;padding:4pt 5pt;font-size:9pt;
+   text-transform:uppercase;letter-spacing:.04em}
+td{padding:4pt 5pt;border-bottom:.4pt solid #e3e8e6;vertical-align:top}
+blockquote{margin:0 0 8pt;padding-left:9pt;border-left:2pt solid #0e5e52;color:#3a4a48}
+strong{font-weight:650}
+</style><h1>Read My Report — idea brief</h1>
+<p><strong>Team Clauduss</strong> · Team ID TM-BD39ACE6BC2 · Campus to Cloud Hackathon, Techfest IIT Bombay 2026–27 Priyam Rupapara (leader), Nivaan Shah, Ved Patel, Manan Nagar</p>
+<h2>The problem</h2>
+<p>Every day, lakhs of Indians collect a blood test report and understand almost none of it. The report is a grid of abbreviations, numbers and units — TSH, MCV, RDW — printed in English, and the reference range sits in the next column in the same small type. The patient looks for red ink, finds none, and assumes everything is fine. Or finds one and assumes the worst.</p>
+<p>What they actually need to know is small and simple: <strong>which numbers are outside my own lab&#x27;s range, what does each one measure, and what should I ask my doctor?</strong></p>
+<p>This matters most to the people with the least access. If you can afford a follow-up consultation the same week, a confusing report costs you nothing. If you cannot, the report is the only medical information you will have for months.</p>
+<h2>Who it is for</h2>
+<p>Anyone handed a lab report they cannot read. In practice: patients at small-town and semi-urban labs, people booking tests directly through a diagnostic chain with no doctor in between, and the family member who ends up explaining the report to everyone else.</p>
+<h2>How it works</h2>
+<p>Upload the report — the PDF the lab emailed, or a photo of the printout.</p>
+<ol>
+<li>The page is read into text: a PDF with <strong>pypdf</strong> inside the Lambda, a photograph by</li>
+</ol>
+<p><strong>Amazon Bedrock</strong>, which accepts images. (Textract was the first choice and is denied on the AWS free plan, so the model does both jobs. See the build summary.)</p>
+<ol>
+<li>Our parser pulls out each row: test name, value, unit, and **the reference range the</li>
+</ol>
+<p>lab printed on that same row**.</p>
+<ol>
+<li>Each value is compared against <em>that lab&#x27;s own range</em>. Nothing is compared to a</li>
+</ol>
+<p>table we wrote.</p>
+<ol>
+<li>For every value outside range, the page shows what the test measures, what a high or</li>
+</ol>
+<p>low result can suggest, and one question worth asking the doctor — each line carrying the source it came from and the date that source was last updated.</p>
+<ol>
+<li><strong>Amazon Bedrock</strong> joins those sourced notes and the patient&#x27;s own numbers into a</li>
+</ol>
+<p>short paragraph, in English or Hindi. It is given the facts; it is not asked to supply them.</p>
+<p>Each result is also drawn against the lab&#x27;s own interval — the band is the normal range, the pin is where this person sits — so the shape of the answer lands before the words do.</p>
+<p>Then they can ask. <strong>Niqo</strong>, our assistant, answers follow-up questions using only the results on their report and the sourced notes behind them. Ask it whether you have a condition and it declines and restates the numbers; ask it what to take and it sends you to your doctor.</p>
+<p>It explains. It does not diagnose, it names no medicine, and every answer ends by pointing at a doctor.</p>
+<h2>The decision we are most sure about</h2>
+<p><strong>We read the reference range off the patient&#x27;s report rather than storing our own.</strong></p>
+<p>Ranges genuinely differ between labs, machines and methods, and between men, women and children. An app that hardcodes them will tell somebody their result is abnormal when their own lab says it is fine. Reading the lab&#x27;s printed range means the comparison belongs to the lab, and our part is arithmetic. It also keeps the medical claims in our code down to zero, which is the right place for them to be.</p>
+<h2>Why this team</h2>
+<p>We already build software for exactly this corner of Indian healthcare.</p>
+<p><strong>Kliniqo</strong> is our pathology-lab product, live in production today. It is the system that produces reports like the ones this tool reads, so we know their layouts, their quirks, and how a lab actually prints a reference interval. That is the part a team without this background gets wrong.</p>
+<p><strong>Niqo</strong> is our AI assistant, and it is in this build answering the follow-up questions. Building it taught us the discipline this needed: grounding an AI in sourced material rather than letting it answer from memory, keeping a hard cap on per-day spend, and falling back gracefully when the model is unavailable. All three ideas are in this build.</p>
+<p>We are not guessing about the problem either: it is the question labs get asked after the report is handed over, and a lab has no time to answer it.</p>
+<h2>Impact</h2>
+<p>For the patient: they arrive at the consultation knowing which two numbers matter and what to ask, instead of handing over a sheet of paper and waiting.</p>
+<p>For the lab: fewer calls asking what a number means.</p>
+<p>The honest limit: this tool cannot tell anyone what is wrong with them, and should not. Its ambition is to turn an unreadable page into three sensible questions.</p>
+<h2>What is not built yet</h2>
+<ul>
+<li>Only blood tests with a printed numeric range are read. Scans, cultures and</li>
+</ul>
+<p>descriptive findings are out of scope.</p>
+<ul>
+<li>The Hindi notes were translated once from our own English sentences and committed, so</li>
+</ul>
+<p>they can be read and checked; they have not been reviewed by a clinician.</p>
+<ul>
+<li>The sourced glossary covers sixteen common tests. Anything else is still flagged as</li>
+</ul>
+<p>high or low from the lab&#x27;s own range, but without an explanation.</p>
