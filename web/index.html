@@ -55,6 +55,13 @@ h1{font-size:30px;line-height:1.18;letter-spacing:-.028em;margin:0 0 10px;font-w
 /* ---------- summary ---------- */
 .verdict{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
   padding:20px 21px;margin-bottom:12px;box-shadow:var(--shadow)}
+#out>*{animation:rise .42s cubic-bezier(.2,.7,.3,1) both}
+#out>*:nth-child(2){animation-delay:.05s}
+#out>*:nth-child(3){animation-delay:.1s}
+#out>*:nth-child(n+4){animation-delay:.14s}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.grow{opacity:0;animation:fade .45s ease both}
+@keyframes fade{to{opacity:1}}
 .verdict .count{display:flex;align-items:baseline;gap:9px;margin-bottom:13px}
 .verdict .n{font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1}
 .verdict .of{color:var(--faint);font-size:13.5px}
@@ -65,6 +72,17 @@ h1{font-size:30px;line-height:1.18;letter-spacing:-.028em;margin:0 0 10px;font-w
 .allgood{display:flex;gap:11px;align-items:flex-start}
 .allgood .tick{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ok);
   color:#fff;display:grid;place-items:center;font-size:12px;margin-top:1px}
+
+/* ---------- Niqo ---------- */
+.greet{display:flex;flex-direction:column;align-items:center;gap:9px;margin-bottom:17px}
+.greet p{margin:0;font-size:14.5px;color:var(--body);max-width:24em}
+.niqo-svg{display:block}
+.niqo-read,.niqo-think{animation:bob 2.1s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){
+  .niqo-read,.niqo-think{animation:none}
+  .card,.verdict,.glance{animation:none!important}
+}
 
 /* ---------- the whole report at a glance ---------- */
 .glance{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
@@ -146,8 +164,7 @@ details.normals[open] summary::after{transform:rotate(-135deg);margin-top:7px}
 .niqo{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
   padding:19px 20px;margin-top:12px;box-shadow:var(--shadow)}
 .niqo{display:flex;gap:13px}
-.avatar{flex:none;width:36px;height:36px;border-radius:11px;background:var(--brand);
-  display:grid;place-items:center;margin-top:1px}
+.avatar{flex:none;margin-top:-2px}
 .niqo .body{flex:1;min-width:0}
 .niqo h3{margin:0 0 2px;font-size:15.5px;font-weight:650;letter-spacing:-.012em}
 .niqo .sub{margin:0 0 13px;font-size:13.3px;color:var(--faint)}
@@ -196,6 +213,7 @@ details.normals[open] summary::after{transform:rotate(-135deg);margin-top:7px}
       what each one measures, and what to ask your doctor.</p>
 
     <div class="drop" id="drop">
+      <div class="greet"><div id="face"></div><p id="greeting"></p></div>
       <button class="btn" id="pick">Choose your report</button>
       <p class="hint" id="hint">PDF or a photo of the printout. Nothing is stored.</p>
       <input type="file" id="file" accept="application/pdf,image/jpeg,image/png" class="hidden">
@@ -214,6 +232,7 @@ details.normals[open] summary::after{transform:rotate(-135deg);margin-top:7px}
   <p class="foot" id="foot"></p>
 </div>
 
+<script src="niqo.js"></script>
 <script src="config.js"></script>
 <script>
 const API = window.READ_MY_REPORT_API || "";
@@ -233,10 +252,12 @@ const T = {
     pick: "Choose your report", hint: "PDF or a photo of the printout. Nothing is stored.",
     try: "Or try one:", outside: "What they mean", of: n => `of ${n} outside your lab's range`,
     glance: "Every value on your report", inband: "your lab's range", you: "you",
+    greet: "Hi, I'm Niqo. Show me your report and I'll tell you what stands out.",
+    reading: "Reading your report",
     detail: "More",
     allgood: "Every value on this report is inside your lab's own range.",
     normals: n => n === 1 ? "The 1 value within range" : `The ${n} values within range`, ask: "Ask your doctor", src: "Source",
-    high: "Higher", low: "Lower", reading: "Reading your report",
+    high: "Higher", low: "Lower",
     niqoH: "Ask Niqo", niqoS: "Only about this report. It explains; it does not diagnose.",
     placeholder: "Ask a question about your results…", send: "Ask",
     q1: t => `What does ${t} mean?`, q2: "Which result matters most?", q3: "What should I ask my doctor?",
@@ -249,10 +270,12 @@ const T = {
     pick: "अपनी रिपोर्ट चुनें", hint: "PDF या प्रिंटआउट की फ़ोटो। कुछ भी सेव नहीं होता।",
     try: "या यह देखें:", outside: "इनका मतलब", of: n => `${n} में से, लैब की सीमा से बाहर`,
     glance: "आपकी रिपोर्ट की हर वैल्यू", inband: "लैब की सीमा", you: "आप",
+    greet: "नमस्ते, मैं Niqo हूँ। अपनी रिपोर्ट दिखाइए, मैं बताऊँगा कि क्या खास है।",
+    reading: "रिपोर्ट पढ़ रहा हूँ",
     detail: "और",
     allgood: "इस रिपोर्ट की हर वैल्यू आपकी लैब की अपनी सीमा के भीतर है।",
     normals: n => `सीमा के भीतर वाली ${n} वैल्यू`, ask: "डॉक्टर से यह पूछें", src: "स्रोत",
-    high: "ज़्यादा", low: "कम", reading: "रिपोर्ट पढ़ी जा रही है",
+    high: "ज़्यादा", low: "कम",
     niqoH: "Niqo से पूछें", niqoS: "सिर्फ़ इसी रिपोर्ट के बारे में। यह समझाता है, बीमारी नहीं बताता।",
     placeholder: "अपने नतीजों के बारे में सवाल पूछें…", send: "पूछें",
     q1: t => `${t} का मतलब क्या है?`, q2: "कौन-सा नतीजा सबसे ज़रूरी है?", q3: "डॉक्टर से क्या पूछूँ?",
@@ -269,6 +292,8 @@ function chrome(){
   $("#hint").textContent = t.hint;
   $("#trylabel").textContent = t.try;
   $("#foot").innerHTML = t.foot;
+  $("#greeting").textContent = t.greet;
+  Niqo.set($("#face"), "rest", 66);
 }
 
 $("#pick").onclick = () => $("#file").click();
@@ -298,6 +323,9 @@ function busy(on){
   $("#pick").innerHTML = on
     ? `<span class="spin"></span>${T[lang].reading}…`
     : T[lang].pick;
+  Niqo.set($("#face"), on ? "read" : "rest", 66);
+  if (on) $("#greeting").textContent = T[lang].reading + "…";
+  else $("#greeting").textContent = T[lang].greet;
 }
 
 async function send(file){
@@ -438,13 +466,7 @@ function render(data){
   }
 
   h += `<div class="niqo">
-    <div class="avatar" aria-hidden="true">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-        <path d="M5 9.5a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4H10l-4 3v-3.6A4 4 0 0 1 5 12.5z"
-              stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/>
-        <circle cx="10" cy="11" r="1.15" fill="#fff"/><circle cx="14" cy="11" r="1.15" fill="#fff"/>
-      </svg>
-    </div>
+    <div class="avatar" id="niqoface" aria-hidden="true"></div>
     <div class="body">
       <h3>${t.niqoH}</h3>
       <p class="sub">${t.niqoS}</p>
@@ -459,6 +481,7 @@ function render(data){
   </div>`;
 
   out.innerHTML = h;
+  Niqo.set($("#niqoface"), data.outside.length ? "rest" : "done", 44);
   out.querySelectorAll("[data-q]").forEach(b => b.onclick = () => askNiqo(b.dataset.q));
   $("#qsend").onclick = () => askNiqo($("#q").value);
   $("#q").addEventListener("keydown", e => { if (e.key === "Enter") askNiqo($("#q").value); });
@@ -475,6 +498,7 @@ async function askNiqo(question){
   el.innerHTML = `<p class="q">${esc(question)}</p><p class="a"><span class="spin"
     style="border-color:#cfd8d5;border-top-color:#0b4f45"></span></p>`;
   turns.appendChild(el);
+  Niqo.set($("#niqoface"), "think", 44);
   try{
     const r = await fetch(`${API}/ask`, {method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -483,7 +507,7 @@ async function askNiqo(question){
     el.querySelector(".a").innerHTML = d.answer ? paras(d.answer)
       : esc(T[lang].fail);
   }catch(e){ el.querySelector(".a").textContent = T[lang].fail; }
-  finally{ btn.disabled = false; }
+  finally{ btn.disabled = false; Niqo.set($("#niqoface"), "rest", 44); }
 }
 
 chrome();

@@ -65,6 +65,16 @@ lab, method and machine. Reading the lab's own printed interval means we never t
 someone they are abnormal when their lab says otherwise, and it keeps medical claims
 out of our code.
 
+**Niqo is drawn, and the drawing does a job.** The character is one rounded form, two
+eyes and an antenna, in the single brand colour — no gradients, no shine, no grin. It
+sits on a page about someone's blood test, so it has to be friendly without being jolly.
+It carries four states rather than decoration, and those states are how the page shows
+what it is doing: resting while it waits, eyes tracking left to right while the report
+is being read, antenna pulsing while it thinks about a question, and a brief smile when
+a report comes back entirely inside range. All of it is inline SVG in `web/niqo.js`,
+about 2 KB, no image files and no animation library, and every motion stops under
+`prefers-reduced-motion`.
+
 **Niqo answers follow-up questions, on a very short leash.** A free-text box is where
 guardrails get tested, so Niqo is handed three things and nothing else: the results read
 off this person's report, the sourced notes for those results, and the question. The
