@@ -1,0 +1,152 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Read My Report - explains a lab report in plain words. Team Clauduss, Techfest 2026-27. Deploys to ap-southeast-2.
+
+Globals:
+  Function:
+    Runtime: python3.12
+    MemorySize: 512
+    Timeout: 30
+    Architectures: [arm64]          # cheaper per millisecond than x86 on Lambda
+
+Parameters:
+  BedrockModelId:
+    Type: String
+    Default: anthropic.claude-haiku-5-5
+    Description: >
+      The Bedrock model that writes the plain-language summary. Read off the Bedrock model
+      catalogue in ap-southeast-2 on 24 Nov 2026, where it is offered serverless and lists
+      Hindi among its languages. Note the region: this account's free plan is assigned to
+      ap-southeast-2 (Sydney) and cannot use other regions without a paid upgrade.
+
+Resources:
+
+  # The page itself. Private bucket; only CloudFront may read it.
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}
+
+  # Nothing is meant to live here: reports are processed in memory. The bucket exists
+  # only so a large upload can be staged, and anything staged is deleted after a day.
+  ScratchBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}
+      LifecycleConfiguration:
+        Rules:
+          - Id: delete-after-one-day
+            Status: Enabled
+            ExpirationInDays: 1
+            AbortIncompleteMultipartUpload: {DaysAfterInitiation: 1}
+
+  ReadFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: handler.lambda_handler
+      Environment:
+        Variables:
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          USE_TEXTRACT: '1'
+          SCRATCH_BUCKET: !Ref ScratchBucket
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: [textract:DetectDocumentText]
+              Resource: '*'
+            - Effect: Allow
+              Action: [bedrock:InvokeModel]
+              # Two forms, because a model called in-region and a model called through a
+              # global inference profile have different ARNs.
+              Resource:
+                - !Sub arn:aws:bedrock:${AWS::Region}::foundation-model/*
+                - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*
+        - S3CrudPolicy: {BucketName: !Ref ScratchBucket}
+      Events:
+        Read:
+          Type: Api
+          Properties:
+            Path: /read
+            Method: post
+            RestApiId: !Ref Api
+
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: live
+      BinaryMediaTypes: ['application/pdf', 'image/jpeg', 'image/png']
+      Cors:
+        AllowMethods: "'POST,OPTIONS'"
+        AllowHeaders: "'Content-Type'"
+        AllowOrigin: "'*'"
+      MethodSettings:
+        - ResourcePath: /*
+          HttpMethod: '*'
+          ThrottlingBurstLimit: 20
+          ThrottlingRateLimit: 10      # a hard ceiling, so a bad day cannot cost money
+
+  CloudFrontOac:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub ${AWS::StackName}-oac
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: site
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            S3OriginConfig: {OriginAccessIdentity: ''}
+            OriginAccessControlId: !GetAtt CloudFrontOac.Id
+        DefaultCacheBehavior:
+          TargetOriginId: site
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6   # CachingOptimized
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: {Service: cloudfront.amazonaws.com}
+            Action: s3:GetObject
+            Resource: !Sub ${SiteBucket.Arn}/*
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}
+
+Outputs:
+  SiteUrl:
+    Description: The live prototype URL to put in the submission.
+    Value: !Sub https://${Distribution.DomainName}
+  ApiUrl:
+    Description: Put this in web/config.js as READ_MY_REPORT_API.
+    Value: !Sub https://${Api}.execute-api.${AWS::Region}.amazonaws.com/live
+  SiteBucketName:
+    Value: !Ref SiteBucket

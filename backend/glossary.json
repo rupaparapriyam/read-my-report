@@ -1,0 +1,115 @@
+{
+  "_about": "Plain-language notes for common blood tests. Every line is taken from the source page named in its entry, fetched 24 November 2026. No reference ranges are stored here on purpose: those are read from each patient's own report, because they differ by lab and method. Nothing here is a diagnosis.",
+  "haemoglobin": {
+    "what": "Haemoglobin is the iron-rich protein in red blood cells that carries oxygen; this test measures how much of it is in your blood.",
+    "high": "A higher result can be a sign of lung or heart disease or of polycythaemia, and is often seen with dehydration, smoking or living at high altitude.",
+    "low": "A lower result can be a sign of anaemia, low iron or vitamin B-12, thalassaemia, blood loss or liver disease.",
+    "ask": "What could be causing my haemoglobin result, and do I need follow-up tests such as iron or vitamin B-12 levels?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/hemoglobin-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "27 October 2024"}
+  },
+  "packed_cell_volume": {
+    "what": "This test shows what share of your blood is made up of red blood cells, the cells that carry oxygen around your body.",
+    "high": "A higher result is often seen with dehydration, and can be a sign of the body making too many red blood cells, as in some lung or heart conditions.",
+    "low": "A lower result can be a sign of anaemia or blood loss, and is also commonly seen in pregnancy because of the extra fluid in the body.",
+    "ask": "What level is normal for me given my age, sex, smoking and altitude, and do I need a full blood count or iron tests?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/hematocrit-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "25 November 2024"}
+  },
+  "mcv": {
+    "what": "Mean corpuscular volume, or MCV, is the average size of your red blood cells.",
+    "high": "A higher MCV, meaning larger cells, can be a sign of anaemia from a vitamin B deficiency, or of liver disease.",
+    "low": "A lower MCV, meaning smaller cells, can be a sign of iron deficiency anaemia or of thalassaemia, an inherited blood disorder.",
+    "ask": "What do my MCV and other red cell results mean together, and do I need tests for iron or vitamin levels?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/red-blood-cell-rbc-indices/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "7 October 2024"}
+  },
+  "rdw": {
+    "what": "Red cell distribution width, or RDW, measures how much your red blood cells differ from one another in size and volume.",
+    "high": "A result outside the range means there are differences in the size of your red blood cells; on its own this is not enough for a diagnosis.",
+    "low": "A result outside the range means there are differences in the size of your red blood cells; on its own this is not enough for a diagnosis.",
+    "ask": "What do my RDW and MCV results mean when read together with the rest of my blood count?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/red-blood-cell-rbc-indices/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "7 October 2024"}
+  },
+  "total_leucocyte_count": {
+    "what": "This test counts the white blood cells in your blood; these cells are part of your immune system and help fight infection.",
+    "high": "A higher count is often seen with infection, inflammation, allergy or tissue damage, and can also follow smoking, stress, pregnancy or a reaction to a medicine.",
+    "low": "A lower count can be a sign of bone marrow affected by infection, disease or treatments such as chemotherapy, or of some autoimmune conditions.",
+    "ask": "What might explain my white cell count, and do I need a differential count or other follow-up tests?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/white-blood-count-wbc/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "6 August 2024"}
+  },
+  "platelet_count": {
+    "what": "Platelets are tiny blood cells, made in bone marrow, that help your blood clot; this test counts how many you have.",
+    "high": "A higher count can make blood clot more than needed, and is often seen with infection, inflammation, anaemia, heavy blood loss or some cancers.",
+    "low": "A lower count can lead to easy bruising or bleeding, and can be seen with viral infection, autoimmune disease, vitamin B12 deficiency, cirrhosis or bone marrow problems.",
+    "ask": "Do my platelet results explain my bruising or bleeding, and do any of my medicines affect platelets?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/platelet-tests/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "15 August 2024"}
+  },
+  "tsh": {
+    "what": "TSH is the hormone your pituitary gland uses to tell your thyroid how much thyroid hormone to make; this test measures it.",
+    "high": "A higher TSH often suggests an underactive thyroid, meaning the thyroid is not making enough hormone; rarely it reflects a pituitary problem.",
+    "low": "A lower TSH often suggests an overactive thyroid, and can also dip for a time in early pregnancy or during a serious unrelated illness.",
+    "ask": "Do my TSH results point to a thyroid problem, and which other thyroid tests do you recommend?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "30 October 2024"}
+  },
+  "free_t3": {
+    "what": "Free T3 measures the active, unbound form of triiodothyronine, a thyroid hormone, which can enter the body tissues that need it.",
+    "high": "A higher result can be a sign of an overactive thyroid, meaning the thyroid is making too much hormone.",
+    "low": "A lower result can be a sign of an underactive thyroid, though this test is not commonly used to check for that.",
+    "ask": "What do my T3, free T4 and TSH results mean together, and do I need any follow-up testing?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/triiodothyronine-t3-tests/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "10 January 2024"}
+  },
+  "free_t4": {
+    "what": "Free T4 measures the active, unbound form of thyroxine, the main hormone the thyroid makes, that enters your body tissues.",
+    "high": "A higher result can be a sign of an overactive thyroid, and is also seen with some stages of thyroiditis, too much iodine, or too much thyroid medicine.",
+    "low": "A lower result can be a sign of an underactive thyroid, and is also seen after treatment for an overactive thyroid or thyroid cancer.",
+    "ask": "What do my free T4 and TSH results mean together, and could any of my medicines or supplements be affecting them?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/thyroxine-t4-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "12 December 2024"}
+  },
+  "fasting_blood_sugar": {
+    "what": "This test measures glucose, the main sugar your body uses for energy, in blood taken after at least eight hours without food.",
+    "high": "A higher result can be a sign of prediabetes or diabetes, and is sometimes seen with thyroid, pancreas or adrenal problems, serious illness, or certain medicines.",
+    "low": "A lower result is often linked to diabetes medicines, eating too little or extra activity, and less often to liver, kidney, adrenal, pituitary or thyroid problems.",
+    "ask": "What does my fasting blood sugar mean for me, and do I need another test to confirm it?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/blood-glucose-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "30 December 2024"}
+  },
+  "hba1c": {
+    "what": "HbA1c shows your average blood sugar over the past few months, because glucose sticks to haemoglobin inside your red blood cells.",
+    "high": "A higher result can be a sign of prediabetes or diabetes, and is usually confirmed with another test such as fasting glucose.",
+    "low": "The source does not describe what a lower result means; ask your doctor.",
+    "ask": "What HbA1c is healthy for me, and do I need a second test to confirm this result?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/hemoglobin-a1c-hba1c-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "20 May 2025"}
+  },
+  "total_cholesterol": {
+    "what": "Total cholesterol is the overall amount of cholesterol, a waxy fat-like substance, in your blood, counting both the LDL and HDL kinds.",
+    "high": "A higher result usually means steps to bring cholesterol down are advised, as it adds to the risk of heart and artery disease.",
+    "low": "A low total cholesterol is not described as a concern; low LDL and high HDL are generally good for heart health.",
+    "ask": "Which of my lipid results are outside the healthy range for me, and how often should I be retested?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/cholesterol-levels/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "15 October 2024"}
+  },
+  "ldl_cholesterol": {
+    "what": "LDL is the 'bad' cholesterol, the chief contributor to the fatty build-up that can narrow or block your arteries.",
+    "high": "A higher LDL raises the risk of coronary artery and other heart disease, which can lead to heart attack, stroke or blocked blood flow to the limbs.",
+    "low": "A low LDL is generally good for heart health.",
+    "ask": "Was my LDL measured directly or calculated, and what does my level mean for my heart risk?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/cholesterol-levels/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "15 October 2024"}
+  },
+  "hdl_cholesterol": {
+    "what": "HDL is the 'good' cholesterol; it helps clear LDL cholesterol out of your blood.",
+    "high": "A higher HDL is generally good for heart health and may help lower the risk of heart attack or stroke.",
+    "low": "A lower HDL is flagged as a concern, because it gives less of that protection against heart attack and stroke.",
+    "ask": "Is my HDL low for my age and sex, and what changes would help raise it?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/cholesterol-levels/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "15 October 2024"}
+  },
+  "triglycerides": {
+    "what": "Triglycerides are a type of fat your body uses for energy; this test measures how much of them is in your blood.",
+    "high": "A higher result can add to the risk of heart disease, stroke and metabolic syndrome, and very high levels raise the risk of sudden pancreatitis.",
+    "low": "Triglyceride levels that are too low are very uncommon, and the source says nothing further about them.",
+    "ask": "Do I need to fast before this test, and what do my triglycerides mean for my heart risk?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/triglycerides-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "9 December 2024"}
+  },
+  "serum_creatinine": {
+    "what": "Creatinine is a normal waste product made by your muscles; this blood test is used to judge how well your kidneys filter waste.",
+    "high": "A higher result can be a sign of kidney disease or injury, but is also seen with dehydration, hard exercise, muscle injury or a diet high in meat.",
+    "low": "A lower result is uncommon, and can be seen with poor nutrition, loss of muscle, or serious liver disease.",
+    "ask": "What do my creatinine and eGFR results say about my kidney health, and do I need repeat or additional kidney tests?",
+    "source": {"url": "https://medlineplus.gov/lab-tests/creatinine-test/", "publisher": "MedlinePlus, National Library of Medicine (US)", "last_updated": "5 December 2023"}
+  }
+}

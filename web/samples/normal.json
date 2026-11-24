@@ -1,0 +1,58 @@
+{
+ "language": "English",
+ "disclaimer": "This explains your report in plain words. It is not a diagnosis and not medical advice. Only your doctor can tell you what these results mean for you.",
+ "counts": {
+  "total": 4,
+  "outside": 0,
+  "normal": 4
+ },
+ "outside": [],
+ "normal": [
+  {
+   "test": "Haemoglobin",
+   "value": 13.4,
+   "raw_value": "13.4",
+   "unit": "g/dL",
+   "reference": "12.0 - 15.0",
+   "low": 12.0,
+   "high": 15.0,
+   "status": "normal",
+   "distance": 0.0
+  },
+  {
+   "test": "Total Leucocyte Count",
+   "value": 6800.0,
+   "raw_value": "6,800",
+   "unit": "/cumm",
+   "reference": "4,000 - 11,000",
+   "low": 4000.0,
+   "high": 11000.0,
+   "status": "normal",
+   "distance": 0.0
+  },
+  {
+   "test": "Platelet Count",
+   "value": 2.9,
+   "raw_value": "2.9",
+   "unit": "lakh/cumm",
+   "reference": "1.5 - 4.1",
+   "low": 1.5,
+   "high": 4.1,
+   "status": "normal",
+   "distance": 0.0
+  },
+  {
+   "test": "Fasting Blood Sugar",
+   "value": 88.0,
+   "raw_value": "88",
+   "unit": "mg/dL",
+   "reference": "70 - 100",
+   "low": 70.0,
+   "high": 100.0,
+   "status": "normal",
+   "distance": 0.0
+  }
+ ],
+ "unreadable": [],
+ "read_by": "pdftotext (local)"
+}
