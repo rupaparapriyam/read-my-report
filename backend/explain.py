@@ -16,8 +16,10 @@ Bedrock is unavailable the glossary text is shown as it stands, so the app degra
 import json
 import os
 import pathlib
+import re
 
 GLOSSARY_PATH = pathlib.Path(__file__).with_name("glossary.json")
+GLOSSARY_HI_PATH = pathlib.Path(__file__).with_name("glossary.hi.json")
 MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "anthropic.claude-3-5-haiku-20241022-v1:0")
 
 DISCLAIMER = ("This explains your report in plain words. It is not a diagnosis and not "
@@ -51,7 +53,16 @@ ALIASES = {
 }
 
 
-def load_glossary(path=GLOSSARY_PATH):
+def load_glossary(language="English"):
+    """The sourced notes, in the language asked for, falling back to English.
+
+    The Hindi file is a one-off translation of our own English sentences, made by
+    backend/translate_glossary.py and committed, not translated per request. Each entry
+    keeps the English source's URL and review date, because that is what was read.
+    """
+    path = GLOSSARY_HI_PATH if language == "Hindi" else GLOSSARY_PATH
+    if not path.exists():
+        path = GLOSSARY_PATH
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8"))
@@ -87,7 +98,7 @@ def note_for(result, glossary):
 
 def build_brief(results, language="English"):
     """Everything the page needs, with no AI involved. Always works."""
-    glossary = load_glossary()
+    glossary = load_glossary(language)
     outside = [r for r in results if r.status in ("high", "low")]
     outside.sort(key=lambda r: -r.distance)
     items = []
@@ -109,10 +120,13 @@ Write a short, calm explanation in {language}. Rules you must follow:
 - Use ONLY the facts in NOTES below. Do not add any medical fact of your own.
 - Do not diagnose. Do not name a disease as theirs. Do not mention any medicine,
   dose, diet or treatment.
-- Do not repeat the numbers more than once each.
+- Plain sentences in ordinary paragraphs. No headings, no bullet points, no bold,
+  no asterisks, no hashes, no Markdown of any kind. The page shows your words as
+  they are.
+- The numbers are already on the page beside your text, so do not list them again.
 - Short sentences. No jargon unless the notes define it.
 - End with one line telling them to take the report to their doctor.
-- 120 words or fewer.
+- 110 words or fewer. Finish your last sentence.
 
 THEIR RESULTS THAT ARE OUTSIDE THE LAB'S OWN RANGE:
 {findings}
@@ -136,13 +150,18 @@ def with_bedrock(brief, client=None, language="English"):
         notes = "\n".join(
             f"- {i['result']['test']}: {i['note']['what']} {i['note'].get('means') or ''}"
             for i in brief["outside"] if i.get("note"))
-        body = {"anthropic_version": "bedrock-2023-05-31", "max_tokens": 400,
+        body = {"anthropic_version": "bedrock-2023-05-31", "max_tokens": 700,
                 "temperature": 0.2,
                 "messages": [{"role": "user", "content": PROMPT.format(
                     language=language, findings=findings, notes=notes or "(none)")}]}
         answer = client.invoke_model(modelId=MODEL_ID, body=json.dumps(body))
         payload = json.loads(answer["body"].read())
-        brief["summary"] = payload["content"][0]["text"].strip()
+        text = payload["content"][0]["text"].strip()
+        # A belt-and-braces strip, in case the model reaches for Markdown anyway.
+        text = re.sub(r"^#+\s*", "", text, flags=re.M)
+        text = re.sub(r"\*\*([^*]+)\*\*", r"\1", text)
+        text = re.sub(r"^[-*]\s+", "", text, flags=re.M)
+        brief["summary"] = text.strip()
         brief["summary_by"] = f"Amazon Bedrock, {MODEL_ID}"
     except Exception as exc:                      # noqa: BLE001 - never break the page
         brief["summary"] = None

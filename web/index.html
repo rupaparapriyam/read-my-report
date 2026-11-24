@@ -157,7 +157,8 @@ function setLang(l){
   lang = l;
   $("#en").setAttribute("aria-pressed", l === "English");
   $("#hi").setAttribute("aria-pressed", l === "Hindi");
-  if (window.lastBrief) render(window.lastBrief);
+  if (window.lastSample) sample(window.lastSample);
+  else if (window.lastBrief) render(window.lastBrief);
 }
 
 function busy(on){
@@ -180,8 +181,12 @@ async function send(file){
 
 async function sample(name){
   busy(true);
+  window.lastSample = name;
   try{
-    const r = await fetch(`samples/${name}.json`);
+    // One file per language, so a sample shows the same written answer the live
+    // service produces rather than a stored English one translated on the page.
+    let r = await fetch(`samples/${name}.${lang}.json`);
+    if (!r.ok) r = await fetch(`samples/${name}.json`);
     render(await r.json());
   }catch(err){
     $("#out").classList.remove("hidden");
@@ -210,7 +215,8 @@ function render(brief){
   let html = "";
 
   if (brief.summary){
-    html += `<div class="summary">${esc(brief.summary).replace(/\n/g,"<br>")}
+    html += `<div class="summary">${esc(brief.summary).trim().split(/\n{2,}/)
+      .map(x => `<p style="margin:0 0 9px">${x.replace(/\n/g," ")}</p>`).join("")}
       <div class="by">Written by ${esc(brief.summary_by || "Amazon Bedrock")} from the
       sourced notes below.</div></div>`;
   }

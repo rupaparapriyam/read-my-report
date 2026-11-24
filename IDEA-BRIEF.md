@@ -87,7 +87,7 @@ Its ambition is to turn an unreadable page into three sensible questions.
 
 - Only blood tests with a printed numeric range are read. Scans, cultures and
   descriptive findings are out of scope.
-- Hindi is translated at the point of writing; we have not had the output checked by a
-  native-speaking clinician.
-- The sourced glossary covers thirteen common tests. Anything else is still flagged as
+- The Hindi notes were translated once from our own English sentences and committed, so
+  they can be read and checked; they have not been reviewed by a clinician.
+- The sourced glossary covers sixteen common tests. Anything else is still flagged as
   high or low from the lab's own range, but without an explanation.

@@ -65,6 +65,16 @@ lab, method and machine. Reading the lab's own printed interval means we never t
 someone they are abnormal when their lab says otherwise, and it keeps medical claims
 out of our code.
 
+**Hindi is a real translation, not a live one.** The sourced notes exist in Hindi as a
+committed file, `backend/glossary.hi.json`, translated once from our own English
+sentences by `backend/translate_glossary.py` and checked in so anyone can read it.
+Nothing is translated per request: the hedging is preserved deliberately ("can be a sign
+of" stays "संकेत हो सकता है", never "is"), each entry keeps the English source's URL and
+review date because that is the page that was actually read, and no medical fact was
+introduced in translation. Switching the page to Hindi changes the whole answer — the
+paragraph, what each test measures, what the result can suggest, and the question to ask
+— not only the labels.
+
 **Bedrock is grounded, not trusted.** `glossary.json` holds the medical notes, each
 with a source URL and the date that page was last updated — all thirteen from
 MedlinePlus, the US National Library of Medicine. Bedrock receives those notes and the
